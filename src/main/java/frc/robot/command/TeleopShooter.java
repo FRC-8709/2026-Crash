@@ -22,7 +22,7 @@ public class TeleopShooter extends Command {
         // if (left1Joystick.getRawButtonPressed(6)) m_subsystem.setMotorSpeed(1);
         
         if (left1Joystick.getRawButton(6)) {
-            m_subsystem.setMotorSpeed(10);
+            m_subsystem.setMotorSpeed(6);
         } else if (left1Joystick.getRawButton(4)) {
             m_subsystem.setMotorSpeed(-10);
         } else {
