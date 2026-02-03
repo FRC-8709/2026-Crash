@@ -47,10 +47,28 @@ public class shooter extends SubsystemBase {
         shooterMotor2.setNeutralMode(NeutralModeValue.Coast);
     }
 
+    // Move this to a different helper functions/math file later
+    private double RPMtoRPS(double RPM) {
+        // RPM = RPS * 60
+        return(RPM * 60);
+
+    }
+
+    // Move this to a different helper functions/math file later
+    private double RPStoRPM(double RPS) {
+        // RPS = RPM/60
+        return(RPS/60);
+    }
+
     //shooter.setMotorSpeed(50);
-    public void setMotorSpeed(double speed) {
-        // move motor "speed"
-        shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVoltageOut.withOutput(speed));
-        shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVoltageOut.withOutput(-speed));
+    public void setMotorSpeedRPM(double RPM) {
+        // Convert RPM to RPS and then call setMotorSpeedRPS function
+        setMotorSpeedRPS(RPMtoRPS(RPM));
+    }
+
+    // function to drive both shooter motors at given speed in RPS (rotations persecond)
+    public void setMotorSpeedRPS(double RPS) {
+        shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+        shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
     }
 }
