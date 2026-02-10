@@ -20,7 +20,7 @@ public class TeleopShooter extends Command {
     @Override
     public void execute() {
         // if (left1Joystick.getRawButtonPressed(6)) m_subsystem.setMotorSpeed(1);
-        
+        /*
         if (left1Joystick.getRawButton(6)) {
             m_subsystem.setMotorSpeedRPM(0);
         } else if (left1Joystick.getRawButton(4)) {
@@ -28,7 +28,7 @@ public class TeleopShooter extends Command {
         } else {
             m_subsystem.setMotorSpeedRPM(0);
         }
-
+        */
         super.execute();
     }
 }

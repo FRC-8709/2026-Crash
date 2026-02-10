@@ -23,10 +23,12 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 public class shooter extends SubsystemBase {
@@ -61,14 +63,28 @@ public class shooter extends SubsystemBase {
     }
 
     //shooter.setMotorSpeed(50);
-    public void setMotorSpeedRPM(double RPM) {
+    private void setMotorSpeedRPM(double RPM) {
         // Convert RPM to RPS and then call setMotorSpeedRPS function
         setMotorSpeedRPS(RPMtoRPS(RPM));
     }
 
     // function to drive both shooter motors at given speed in RPS (rotations persecond)
-    public void setMotorSpeedRPS(double RPS) {
-        shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
-        shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+    private void setMotorSpeedRPS(double RPS) {
+        StatusCode code;
+        code = shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+        if(code.equals(StatusCode.OK)) {
+            System.out.println("Motor 1 good");
+        }
+        code = shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+        if(code.equals(StatusCode.OK)) {
+            System.out.println("Motor 2 good");
+        }
+    }
+
+    public Command spinShooterRPM(double RPM) {
+        System.out.print("Spin shooter at ");
+        System.out.print(RPM);
+        System.out.println("RPM.");
+        return runOnce(() -> {setMotorSpeedRPM(RPM);});
     }
 }

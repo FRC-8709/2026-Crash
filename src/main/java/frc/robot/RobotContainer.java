@@ -47,6 +47,9 @@ public class RobotContainer {
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
+    private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft1, 4);
+    private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft1, 4);
+
     private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2));
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -54,7 +57,6 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        s_Shooter.setDefaultCommand(new TeleopShooter(s_Shooter, joystickLeft2));
     }
 
     private void configureBindings() {
@@ -92,6 +94,10 @@ public class RobotContainer {
         joystickLeft1Button1.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        // I think this is correct but maybe not
+        joystickLeft2Button6.onTrue(s_Shooter.spinShooterRPM(500));
+        joystickLeft2Button4.onTrue(s_Shooter.spinShooterRPM(0));
     }
 
     public Command getAutonomousCommand() {
