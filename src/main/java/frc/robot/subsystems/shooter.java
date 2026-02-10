@@ -6,6 +6,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.helpers.Conversions;
 
 public class shooter extends SubsystemBase {
     
@@ -25,23 +26,10 @@ public class shooter extends SubsystemBase {
         shooterMotor2.setNeutralMode(NeutralModeValue.Coast);
     }
 
-    // Move this to a different helper functions/math file later
-    private double RPMtoRPS(double RPM) {
-        // RPM = RPS * 60
-        return(RPM * 60);
-
-    }
-
-    // Move this to a different helper functions/math file later
-    private double RPStoRPM(double RPS) {
-        // RPS = RPM/60
-        return(RPS/60);
-    }
-
     //shooter.setMotorSpeed(50);
     private void spinMotorSpeedRPM(double RPM) {
         // Convert RPM to RPS and then call setMotorSpeedRPS function
-        spinMotorSpeedRPS(RPMtoRPS(RPM));
+        spinMotorSpeedRPS(Conversions.RPStoRPM(RPM));
     }
 
     // function to drive both shooter motors at given speed in RPS (rotations persecond)
