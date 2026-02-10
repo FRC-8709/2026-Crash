@@ -47,14 +47,14 @@ public class RobotContainer {
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
+    private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
+
     private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2));
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
-        configureBindings();
-
-        s_Shooter.setDefaultCommand(new TeleopShooter(s_Shooter, joystickLeft2));
+        configureBindings(); 
     }
 
     private void configureBindings() {
@@ -68,6 +68,9 @@ public class RobotContainer {
                     .withRotationalRate(joystickLeft2.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+
+        joystickLeft2Button6.onTrue(s_Shooter.setMotorSpeedRPM(500));
+        joystickLeft2Button6.onFalse(s_Shooter.setMotorSpeedRPM(0));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
