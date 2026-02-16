@@ -27,6 +27,9 @@ package frc.robot.subsystems;
 =======
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -39,6 +42,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import frc.robot.Constants;
 
@@ -145,6 +151,9 @@ public class shooter extends SubsystemBase {
         System.out.println("RPM.");
         //speedPub.set(RPM);
         return this.runOnce(() -> {setMotorSpeedRPM(RPM);});
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     }
      */
