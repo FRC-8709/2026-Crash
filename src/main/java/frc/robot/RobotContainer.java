@@ -11,6 +11,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,6 +26,10 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.shooter;
 
 public class RobotContainer {
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("datatable");
+
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -47,7 +53,14 @@ public class RobotContainer {
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
+<<<<<<< Updated upstream
     private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2));
+=======
+    private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
+    private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
+
+    private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2), inst.getDoubleTopic("RPS"));
+>>>>>>> Stashed changes
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -92,6 +105,14 @@ public class RobotContainer {
         joystickLeft1Button1.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+<<<<<<< Updated upstream
+=======
+
+        // angry
+        // I am still not convinced that this is actually running
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(10)));
+        joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(0)));
+>>>>>>> Stashed changes
     }
 
     public Command getAutonomousCommand() {
