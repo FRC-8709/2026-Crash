@@ -78,7 +78,7 @@ public class shooter extends SubsystemBase {
         // This method will be called once per scheduler run
         //setRPS(20);
         //setMotorSpeedRPM(30);
-        //speedPub.set(shooterMotor1.getVelocity().getValueAsDouble());
+        speedPub.set(shooterMotor1.getVelocity().getValueAsDouble());
     }
 
     /*
@@ -91,7 +91,6 @@ public class shooter extends SubsystemBase {
     private double RPMtoRPS(double RPM) {
         // RPM = RPS * 60
         return(RPM * 60);
-
     }
 
     // Move this to a different helper functions/math file later

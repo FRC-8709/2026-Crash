@@ -63,7 +63,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
 
-        s_Shooter.setDefaultCommand(new TeleopShooter(s_Shooter, joystickLeft2));
+        //s_Shooter.setDefaultCommand(new TeleopShooter(s_Shooter, joystickLeft2));
     }
 
     private void configureBindings() {
@@ -102,8 +102,6 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        // angry
-        // I am still not convinced that this is actually running
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(10)));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(0)));
     }
