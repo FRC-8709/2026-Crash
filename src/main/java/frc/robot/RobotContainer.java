@@ -53,20 +53,10 @@ public class RobotContainer {
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2));
-=======
-=======
->>>>>>> Stashed changes
     private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
     private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
 
     private final shooter s_Shooter = new shooter(new TalonFX(Constants.ShooterConstants.shooterMotorPort1), new TalonFX(Constants.ShooterConstants.shooterMotorPort2), inst.getDoubleTopic("RPS"));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -111,17 +101,11 @@ public class RobotContainer {
         joystickLeft1Button1.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-<<<<<<< Updated upstream
-=======
 
         // angry
         // I am still not convinced that this is actually running
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(10)));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(0)));
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
 
     public Command getAutonomousCommand() {

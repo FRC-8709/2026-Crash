@@ -23,29 +23,16 @@
 
 package frc.robot.subsystems;
 
-<<<<<<< Updated upstream
-=======
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-<<<<<<< Updated upstream
-=======
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import frc.robot.Constants;
 
 public class shooter extends SubsystemBase {
@@ -120,11 +107,6 @@ public class shooter extends SubsystemBase {
     }
 
     // function to drive both shooter motors at given speed in RPS (rotations persecond)
-<<<<<<< Updated upstream
-    public void setMotorSpeedRPS(double RPS) {
-        shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
-        shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
-=======
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
         speedPub.set(RPS);
@@ -151,10 +133,6 @@ public class shooter extends SubsystemBase {
         System.out.println("RPM.");
         //speedPub.set(RPM);
         return this.runOnce(() -> {setMotorSpeedRPM(RPM);});
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     }
      */
 }
