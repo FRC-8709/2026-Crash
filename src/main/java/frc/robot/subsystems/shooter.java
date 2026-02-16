@@ -70,6 +70,7 @@ public class shooter extends SubsystemBase {
 
         // I am going to start the motors in neutral mode
         shooterMotor1.setNeutralMode(NeutralModeValue.Coast);
+        //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
         //shooterMotor2.setNeutralMode(NeutralModeValue.Coast);
     }
 

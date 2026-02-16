@@ -102,8 +102,13 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+        // Turn shooter on/off
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(10)));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(0)));
+
+        // Put intake in/out
+        //joystick.onTrue(Commands.runOnce(() -> intake.goOut()));
+
     }
 
     public Command getAutonomousCommand() {
