@@ -1,7 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
-//import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 
     public class Constants {
         public class ShooterConstants {
