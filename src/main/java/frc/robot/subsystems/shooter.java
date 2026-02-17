@@ -1,55 +1,28 @@
-// package frc.robot.subsystems;
-
-// import com.ctre.phoenix6.hardware.TalonFX;
-// import com.ctre.phoenix6.signals.NeutralModeValue;
-
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
-// import frc.robot.Constants;
-
-// public class shooter extends SubsystemBase {
-    
-//     public final TalonFX shooterMotor;
-
-//     public shooter(TalonFX shooterMotor) {
-//         this.shooterMotor = shooterMotor;
-//         shooterMotor.setNeutralMode(NeutralModeValue.Brake);
-//     }
-
-//     public void setMotorSpeed(double speed) {
-//         shooterMotor.setControl(Constants.ShooterConstants.kshootermotorVoltageOut.withOutput(speed));
-//     }
-// }
-
-
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.StatusCode;
+// pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+// wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
-import frc.robot.Constants;
 
-public class shooter extends SubsystemBase {
+// custom file imports
+import frc.robot.Constants;
+import frc.robot.helpers.Conversions;
+
+public class Shooter extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
 
-    // Normal stuff
-    
-    public final TalonFX shooterMotor1;
-    public final TalonFX shooterMotor2;
+    // Add more follower motors as needed
+    private final TalonFX leaderShooterMotor, followerShooterMotor1;
 
-    private final VelocityVoltage velocityRequest = new VelocityVoltage(0);
-
-    // When we make a shooter,
-    // Pass it 2 motors
-    public shooter(TalonFX shooterMotor1, TalonFX shooterMotor2, DoubleTopic speedTopic) {
+    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(0.0);
 
@@ -61,78 +34,60 @@ public class shooter extends SubsystemBase {
         config.Slot0.kV = 12;
         config.Slot0.kS = 0.20;
 
-        shooterMotor1.getConfigurator().apply(config);
+        leaderShooterMotor.getConfigurator().apply(config);
 
-        // My 2 motors are the motors you just told me to use
-        // this.
-        this.shooterMotor1 = shooterMotor1;
-        this.shooterMotor2 = shooterMotor2;
+        this.leaderShooterMotor = leaderShooterMotor;
+        this.followerShooterMotor1 = followerShooterMotor1;
 
-        // I am going to start the motors in neutral mode
-        shooterMotor1.setNeutralMode(NeutralModeValue.Coast);
+        leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
-        //shooterMotor2.setNeutralMode(NeutralModeValue.Coast);
-    }
+   }
 
-      @Override
+    @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        //setRPS(20);
-        //setMotorSpeedRPM(30);
-        speedPub.set(shooterMotor1.getVelocity().getValueAsDouble());
+        // Update speed in Network table
+        speedPub.set(leaderShooterMotor.getVelocity().getValueAsDouble());
     }
 
-    /*
-    public void setRPS(double rps) {
-        shooterMotor1.setControl(velocityRequest.withVelocity(rps));
-    }
-    */
-
-    // Move this to a different helper functions/math file later
-    private double RPMtoRPS(double RPM) {
-        // RPM = RPS * 60
-        return(RPM * 60);
-    }
-
-    // Move this to a different helper functions/math file later
-    private double RPStoRPM(double RPS) {
-        // RPS = RPM/60
-        return(RPS/60);
-    }
-
-    //shooter.setMotorSpeed(50);
+    /**
+     * Spin the shooter motors at a given speed.
+     * @param RPM Rotations per Minute
+     */
     public void setMotorSpeedRPM(double RPM) {
         // Convert RPM to RPS and then call setMotorSpeedRPS function
-        setMotorSpeedRPS(RPMtoRPS(RPM));
+        setMotorSpeedRPS(Conversions.RPMtoRPS(RPM));
     }
 
-    // function to drive both shooter motors at given speed in RPS (rotations persecond)
+    /**
+     * Spin the shooter motors at a given speed.
+     * @param RPS Rotations per Second
+     */
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
-        speedPub.set(RPS);
-        shooterMotor1.setControl(velocityRequest.withVelocity(RPS));
+        leaderShooterMotor.setControl(Constants.ShooterConstants.velocityRequest.withVelocity(RPS));
 
         /*
+        // These codes tell us if the control command was succesfully executed, usually unneeded unless debugging
         StatusCode code;
-        code = shooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+        code = leaderShooterMotor.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
         if(code.equals(StatusCode.OK)) {
             System.out.println("Motor 1 good");
         }
         
-        code = shooterMotor2.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
+        code = followerShooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
         if(code.equals(StatusCode.OK)) {
             System.out.println("Motor 2 good");
         }
         */
     }
-    
-    /*
-    public Command spinShooterRPM(double RPM) {
-        System.out.print("Spin shooter at ");
-        System.out.print(RPM);
-        System.out.println("RPM.");
-        //speedPub.set(RPM);
-        return this.runOnce(() -> {setMotorSpeedRPM(RPM);});
-    }
+
+    /**
+     * Stop the shooter motors.
      */
+    public void stopMotors() {
+        // Not sure how this works with the followers, experiment a lil
+        leaderShooterMotor.stopMotor();
+    }
 }
