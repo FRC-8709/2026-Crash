@@ -96,8 +96,8 @@ public class shooter extends SubsystemBase {
 
     // Move this to a different helper functions/math file later
     private double RPStoRPM(double RPS) {
-        // RPS = RPM/60
-        return(RPS/60);
+        // RPS = RPM / 60
+        return(RPS / 60);
     }
 
     //shooter.setMotorSpeed(50);
