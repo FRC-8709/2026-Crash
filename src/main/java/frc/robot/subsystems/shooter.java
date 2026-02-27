@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 // pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 // wpilib imports
@@ -40,7 +43,7 @@ public class Shooter extends SubsystemBase {
         this.followerShooterMotor1 = followerShooterMotor1;
 
         leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-
+        //followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Opposed ));
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
 
@@ -66,21 +69,7 @@ public class Shooter extends SubsystemBase {
      */
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
-        leaderShooterMotor.setControl(Constants.ShooterConstants.velocityRequest.withVelocity(RPS));
-
-        /*
-        // These codes tell us if the control command was succesfully executed, usually unneeded unless debugging
-        StatusCode code;
-        code = leaderShooterMotor.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
-        if(code.equals(StatusCode.OK)) {
-            System.out.println("Motor 1 good");
-        }
-        
-        code = followerShooterMotor1.setControl(Constants.ShooterConstants.kshootermotorVelocity.withVelocity(RPS));
-        if(code.equals(StatusCode.OK)) {
-            System.out.println("Motor 2 good");
-        }
-        */
+        leaderShooterMotor.setControl(Constants.ShooterConstants.shooterVelocity.withVelocity(RPS));
     }
 
     /**

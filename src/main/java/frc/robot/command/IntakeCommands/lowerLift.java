@@ -42,7 +42,8 @@ public class lowerLift extends Command {
         // the intake is down so we can turn the rollers on, so as long as it isn't still inside the robot we are fine.
 
         // Replace this with the "did we go far enough" condition
-        return false;
+        //return (liftMotor.position >= liftOut);
+        return true;
     }
 }
 

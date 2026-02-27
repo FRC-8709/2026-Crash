@@ -7,7 +7,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.Units;
 // custom imports
 import frc.robot.Constants;
 
@@ -15,7 +18,9 @@ import frc.robot.Constants;
 // Lift motor should be tuned positionally like an arm, so it can spin to certain positions
 
 public class IntakeLift extends SubsystemBase {
-    
+    //Publisher
+    private final DoublePublisher positionPub;
+
     private final TalonFX liftMotor;
 
     // Ideally, we would have nice endstops with limit switches, but we are not so fortunate
@@ -26,20 +31,33 @@ public class IntakeLift extends SubsystemBase {
     // This uses the RELATIVE ENCODERS built into the Krakens, so YOU MUST RESET THE INTAKE BEFORE YOU START THE ROBOT EACH TIME
     // THIS IS VERY IMPORTANT
 
-    public IntakeLift(TalonFX liftMotor) {
+    public IntakeLift(TalonFX liftMotor, DoubleTopic positionTopic) {
         this.liftMotor = liftMotor;
 
         TalonFXConfiguration liftConfig = new TalonFXConfiguration();
 
+        positionPub = positionTopic.publish(); 
+        positionPub.setDefault(0.0);
+        
+
         // Dummy numbers! Please tune!
         // Tune like arm for POSITION CONTROL (PositionVoltage)
-        liftConfig.Slot0.kP = 0.08;
+        liftConfig.Slot0.kP = 0.3;
         liftConfig.Slot0.kI = 0.0;
-        liftConfig.Slot0.kD = 0.0;
-        liftConfig.Slot0.kV = 12;
-        liftConfig.Slot0.kS = 0.20;
+        liftConfig.Slot0.kD = 0.05;
+        liftConfig.Slot0.kV = 0.15;
+        liftConfig.Slot0.kS = 0.0;
 
         liftMotor.getConfigurator().apply(liftConfig);
+        liftMotor.setPosition(0);
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        // Update speed in Network table
+        //setMotorSpeedRPS(5);
+        positionPub.set(liftMotor.getPosition().getValue().in(Units.Degrees));
     }
 
     /**
@@ -47,7 +65,8 @@ public class IntakeLift extends SubsystemBase {
      * This lets it pick up fuel, YOU SHOULD NOT SPIN THE ROLLER WITHOUT DOING THIS!
      */
     public void lowerLift() {
-        liftMotor.setControl(Constants.IntakeConstants.liftDownPosition);
+        // THIS WORKS WITH WHOLE NUMBERS BUT NOT DECIMALS FOR SOME REASON??? GOING TO LOSE MY MIND
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(-0.5));
     }
 
     /**
@@ -55,6 +74,6 @@ public class IntakeLift extends SubsystemBase {
      * THE INTAKE SHOULD BE STOPPED ALREADY!
      */
     public void raiseLift() {
-        liftMotor.setControl(Constants.IntakeConstants.liftUpPosition);
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(0.5));
     }
 }

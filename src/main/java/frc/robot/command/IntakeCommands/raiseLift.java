@@ -42,7 +42,7 @@ public class raiseLift extends Command {
         // the intake is no longer outside of the robot.
 
         // Replace this with the "did we go far enough" condition
-        return false;
+        return true;
     }
 }
 

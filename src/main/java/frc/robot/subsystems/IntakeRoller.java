@@ -10,62 +10,63 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 
-// custom imports
+// custom file imports
 import frc.robot.Constants;
-
-// Roller motor is the motor that controls the intake roller
-// Roller motor should be tuned like the flywheel, to maintain a semi-constant RPM
 
 public class IntakeRoller extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
-    
+
+    // Add more follower motors as needed
     private final TalonFX rollerMotor;
 
-    public IntakeRoller(TalonFX rollerMotor, DoubleTopic speedTopic) {
+    public IntakeRoller(TalonFX rollerMotor,  DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
-        speedPub.setDefault(0.0);
+        speedPub.setDefault(1.0);
 
-        TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
+        TalonFXConfiguration config = new TalonFXConfiguration();
 
-        // Dummy numbers! Please tune!
-        // Tune like flywheel for SPEED CONTROL (VelocityVoltage)
-        rollerConfig.Slot0.kP = 0.08;
-        rollerConfig.Slot0.kI = 0.0;
-        rollerConfig.Slot0.kD = 0.0;
-        rollerConfig.Slot0.kV = 12;
-        rollerConfig.Slot0.kS = 0.20;
+        config.Slot0.kP = 0.08;
+        config.Slot0.kI = 0.0;
+        config.Slot0.kD = 0.0;
+        config.Slot0.kV = 12;
+        config.Slot0.kS = 0.20;
 
-        rollerMotor.getConfigurator().apply(rollerConfig);
+        rollerMotor.getConfigurator().apply(config);
+
+        this.rollerMotor = rollerMotor;
+        //this.followerShooterMotor1 = followerShooterMotor1;
 
         rollerMotor.setNeutralMode(NeutralModeValue.Coast);
-    
-        this.rollerMotor = rollerMotor;
-    }
+
+        //speedPub.set(5.0);
+
+        //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
+   }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        }
-
-    /**
-     * Spin the intake roller to pick up "fuel."
-     * MAKE SURE THE INTAKE IS DOWN!
-     */
-    public void spinRoller() {
-        // Aim for a target speed with PID, speed value in Constants file
-        //rollerMotor.setControl(Constants.IntakeConstants.rollerVelocity.withVelocity(50));
-        rollerMotor.setControl(Constants.ShooterConstants.velocityRequest.withVelocity(50));
-        speedPub.set(50);
+        // Update speed in Network table
+        //setMotorSpeedRPS(5);
+        speedPub.set(rollerMotor.getVelocity().getValueAsDouble());
     }
 
     /**
-     * Stop spinning the intake roller.
+     * Spin the shooter motors at a given speed.
+     * @param RPS Rotations per Second
+     */
+    public void spinRoller() {
+        // Publish the RPS to the network table
+        rollerMotor.setControl(Constants.IntakeConstants.rollerVelocity);
+    }
+
+    /**
+     * Stop the shooter motors.
      */
     public void stopRoller() {
-        // Stop the motor
+        // Not sure how this works with the followers, experiment a lil
         rollerMotor.stopMotor();
     }
 }
-
