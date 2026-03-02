@@ -23,9 +23,9 @@ public class Shooter extends SubsystemBase {
     final DoublePublisher speedPub;
 
     // Add more follower motors as needed
-    private final TalonFX leaderShooterMotor, followerShooterMotor1;
+    private final TalonFX leaderShooterMotor, followerShooterMotor1, followerShooterMotor2, followerShooterMotor3;
 
-    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, DoubleTopic speedTopic) {
+    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, TalonFX followerShooterMotor2, TalonFX followerShooterMotor3 , DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(0.0);
 
@@ -41,9 +41,13 @@ public class Shooter extends SubsystemBase {
 
         this.leaderShooterMotor = leaderShooterMotor;
         this.followerShooterMotor1 = followerShooterMotor1;
-
+        this.followerShooterMotor2 = followerShooterMotor2;
+        this.followerShooterMotor3 = followerShooterMotor3;
         leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
-        //followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Opposed ));
+        followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Aligned ));
+        followerShooterMotor2.setControl(new Follower(leaderShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed ));
+        followerShooterMotor3.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Opposed ));
+
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
 

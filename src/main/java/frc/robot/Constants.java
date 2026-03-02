@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import frc.robot.command.IntakeCommands.startRollers;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 
@@ -12,8 +13,10 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 
         public class ShooterConstants {
             // Motor CAN ids
-            public static final int leaderShooterMotorPort = 19;
-            public static final int followerShooterMotor1Port = 18;
+            public static final int leaderShooterMotorPort = 14;
+            public static final int followerShooterMotor1Port = 15;
+            public static final int followerShooterMotor2Port = 16;
+            public static final int followerShooterMotor3Port = 17;
 
             // Object for speed control
             // Eventually we might want to do something similar to what I did with the rollerVelocity,
@@ -21,11 +24,30 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(0);
         }
 
+        public class HoodConstants {
+            // Hood CAN ids
+            public static final int hoodMotorPort = 19;
+        
+            public static final VelocityVoltage hoodVelocity = new VelocityVoltage(0);
+        }
+
+        public class IndexerConstants {
+            // Indexer CAN ids
+            public static final int indexerMotorPort = 18;
+        
+            public static final VelocityVoltage indexerVelocity = new VelocityVoltage(0);
+        }
+
+        public class SensorConsants {
+            // Hood CANcoder ID
+            public static final int hoodSensorPort = 23;
+        }
+
         public class IntakeConstants {
             // Motor CAN ids
             // Update these cause I made these up too
-            public static final int rollerMotorPort = 19;
-            public static final int liftMotorPort = 18;
+            public static final int rollerMotorPort = 0;
+            public static final int liftMotorPort = 0;
 
             // Speed constants
             // I 100% made this number up, change it as soon as the intake is actually built

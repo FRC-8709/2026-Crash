@@ -8,6 +8,7 @@ package frc.robot;
 // This was kept seperate for some reason so I'm just leaving it like this
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 // pheonix6 imports
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -35,6 +36,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.HoodSensor;
 import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Shooter;
@@ -73,29 +75,37 @@ public class RobotContainer {
     // Set up button controls
     // I don't love this setup, it feels like there should be a better way but I am just gonna leave it
 
-    // Swerve buttons
+    // Swerve Buttons
     private final JoystickButton joystickLeft1Button4 = new JoystickButton(joystickLeft1, 4);
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
-    // Shooter buttons
+    // Shooter Buttons
     private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
     private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
 
-    // Intake Roller buttons
+    // Hood Control Buttons
+    private final JoystickButton joystickRight2Button8 = new JoystickButton(joystickRight2, 8);
+    private final JoystickButton joystickRight2Button10 = new JoystickButton(joystickRight2, 10);
+    private final JoystickButton joystickRight2Button12 = new JoystickButton(joystickRight2, 12);
+
+    // Indexer Contrl Buttons
     private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
     private final JoystickButton joystickLeft2Button3 = new JoystickButton(joystickLeft2, 3);
-
 
     // Subsystem instance declaration
     private final Agitator s_Agitator = new Agitator(); // Not implemented yet
 
-    private final Hood s_Hood = new Hood(); // Not implemented yet
+    private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), inst.getDoubleTopic("make")); // Not implemented yet
+    
+    private final Hood s_Indexer = new Hood(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2")); // Not implemented yet
+
+    private final HoodSensor s_HoodSensor = new HoodSensor(new CANcoder(Constants.SensorConsants.hoodSensorPort), inst.getDoubleTopic("HoodSensor"));
 
     private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), inst.getDoubleTopic("LiftPosition"));
     private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"));
 
-    private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port), inst.getDoubleTopic("RPS"));
+    private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("RPS"));
 
     // Swerve instance declaration
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -113,7 +123,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() ->
                 drive.withVelocityX(joystickLeft1.getY() * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(joystickLeft1.getX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(joystickLeft2.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                    .withRotationalRate(-joystickLeft2.getX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -152,8 +162,18 @@ public class RobotContainer {
 
         // SHOOTER CONTROLS
         // Turn shooter on/off
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(1)));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
+
+        // HOOD CONTROLS
+        joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(3)));
+        joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopRoller()));
+        joystickRight2Button12.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-3)));
+
+        // INDEXER CONTROLS
+        // Turn indexer on/off
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-25)));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
 
         // INTAKE ROLLER CONTROLS
         // Put intake out and start it
@@ -164,8 +184,8 @@ public class RobotContainer {
         //INTAKE LIFT
         //joystickLeft2Button5.onTrue(new raiseLift(s_IntakeLift));
         //joystickLeft2Button3.onTrue(new lowerLift(s_IntakeLift));
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_IntakeLift.lowerLift()));
+        //joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));
+        //joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_IntakeLift.lowerLift()));
 
     }
 

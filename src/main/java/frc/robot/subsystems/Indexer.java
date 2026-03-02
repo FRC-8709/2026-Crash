@@ -15,15 +15,15 @@ import edu.wpi.first.networktables.DoubleTopic;
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
 
-public class Hood extends SubsystemBase {
+public class Indexer extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
 
     // Add more follower motors as needed
-    private final TalonFX hoodMotor;
+    private final TalonFX indexerMotor;
 
-    public Hood(TalonFX hoodMotor,  DoubleTopic speedTopic) {
+    public Indexer(TalonFX indexerMotor,  DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(1.0);
 
@@ -35,12 +35,12 @@ public class Hood extends SubsystemBase {
         config.Slot0.kV = 12;
         config.Slot0.kS = 0.20;
 
-        hoodMotor.getConfigurator().apply(config);
+        indexerMotor.getConfigurator().apply(config);
 
-        this.hoodMotor = hoodMotor;
+        this.indexerMotor = indexerMotor;
         //this.followerShooterMotor1 = followerShooterMotor1;
 
-        hoodMotor.setNeutralMode(NeutralModeValue.Brake);
+        indexerMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //speedPub.set(5.0);
 
@@ -52,7 +52,7 @@ public class Hood extends SubsystemBase {
         // This method will be called once per scheduler run
         // Update speed in Network table
         //setMotorSpeedRPS(5);
-        speedPub.set(hoodMotor.getVelocity().getValueAsDouble());
+        speedPub.set(indexerMotor.getVelocity().getValueAsDouble());
     }
 
     // /**
@@ -79,7 +79,7 @@ public class Hood extends SubsystemBase {
      */
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
-        hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(RPS));
+        indexerMotor.setControl(Constants.IndexerConstants.indexerVelocity.withVelocity(RPS));
     }
 
     /**
@@ -87,6 +87,6 @@ public class Hood extends SubsystemBase {
      */
     public void stopRoller() {
         // Not sure how this works with the followers, experiment a lil
-        hoodMotor.stopMotor();
+        indexerMotor.stopMotor();
     }
 }
