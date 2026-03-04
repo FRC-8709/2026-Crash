@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 // pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +25,7 @@ public class IntakeLift extends SubsystemBase {
     private final DoublePublisher positionPub;
 
     private final TalonFX liftMotor;
+    private final CANcoder liftEncoder;
 
     // Ideally, we would have nice endstops with limit switches, but we are not so fortunate
     // This is the programmer's burden, work a miracle with what you are given because
@@ -31,14 +35,12 @@ public class IntakeLift extends SubsystemBase {
     // This uses the RELATIVE ENCODERS built into the Krakens, so YOU MUST RESET THE INTAKE BEFORE YOU START THE ROBOT EACH TIME
     // THIS IS VERY IMPORTANT
 
-    public IntakeLift(TalonFX liftMotor, DoubleTopic positionTopic) {
-        this.liftMotor = liftMotor;
-
-        TalonFXConfiguration liftConfig = new TalonFXConfiguration();
-
+    public IntakeLift(TalonFX liftMotor, CANcoder liftEncoder, DoubleTopic positionTopic) {
         positionPub = positionTopic.publish(); 
         positionPub.setDefault(0.0);
-        
+
+        TalonFXConfiguration liftConfig = new TalonFXConfiguration();
+        CANcoderConfiguration CANcoderConfig = new CANcoderConfiguration();        
 
         // Dummy numbers! Please tune!
         // Tune like arm for POSITION CONTROL (PositionVoltage)
@@ -47,9 +49,13 @@ public class IntakeLift extends SubsystemBase {
         liftConfig.Slot0.kD = 0.05;
         liftConfig.Slot0.kV = 0.15;
         liftConfig.Slot0.kS = 0.0;
+        CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
         liftMotor.getConfigurator().apply(liftConfig);
-        liftMotor.setPosition(0);
+        liftEncoder.getConfigurator().apply(CANcoderConfig);
+
+        this.liftMotor = liftMotor;
+        this.liftEncoder = liftEncoder;
     }
 
     @Override
@@ -57,7 +63,7 @@ public class IntakeLift extends SubsystemBase {
         // This method will be called once per scheduler run
         // Update speed in Network table
         //setMotorSpeedRPS(5);
-        positionPub.set(liftMotor.getPosition().getValue().in(Units.Degrees));
+        positionPub.set(liftEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**

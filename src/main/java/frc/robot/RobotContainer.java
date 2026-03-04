@@ -36,10 +36,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.HoodEncoder;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeLift;
-import frc.robot.subsystems.IntakeLiftEncoder;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Shooter;
 
@@ -63,9 +61,6 @@ public class RobotContainer {
 
     // Ethan here - not actually sure how the telemetry stuff works so I am not touching this
     private final Telemetry logger = new Telemetry(MaxSpeed);
-
-    // Leaving this as reference in case we go back to an Xbox controller
-    //private final CommandXboxController joystick = new CommandXboxController(0);
 
     // Define joysticks
     // Please give these better names, like "mainDriverJoystick1" and "codriverJoystick1" or something
@@ -94,18 +89,16 @@ public class RobotContainer {
     // Indexer Contrl Buttons
     private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
     private final JoystickButton joystickLeft2Button3 = new JoystickButton(joystickLeft2, 3);
+    private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
 
     // Subsystem instance declaration
     private final Agitator s_Agitator = new Agitator(); // Not implemented yet
 
-    private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), inst.getDoubleTopic("make")); // Not implemented yet
+    private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), inst.getDoubleTopic("HoodSpeed"), new CANcoder(Constants.SensorConsants.hoodEncoderPort), inst.getDoubleTopic("HoodEncoder"));
     
-    private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2")); // Not implemented yet
-    private final IntakeLiftEncoder s_IntakeLiftEncoder = new IntakeLiftEncoder(new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("IntakeLiftPOS"));
+    private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2"));
         
-    private final HoodEncoder s_HoodSensor = new HoodEncoder(new CANcoder(Constants.SensorConsants.hoodSensorPort), inst.getDoubleTopic("HoodSensor"));
-
-    private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), inst.getDoubleTopic("LiftPosition"));
+    private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("LiftPosition"));
     private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"));
 
     private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("RPS"));
@@ -166,17 +159,23 @@ public class RobotContainer {
         // SHOOTER CONTROLS
         // Turn shooter on/off
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
+        //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
+
 
         // HOOD CONTROLS
         joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(3)));
-        joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopRoller()));
+        joystickRight2Button8.onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
         joystickRight2Button12.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-3)));
-
+        joystickRight2Button12.onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        
         // INDEXER CONTROLS
         // Turn indexer on/off
         joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-50)));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10)));
+        joystickLeft2Button5.onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
 
         // INTAKE ROLLER CONTROLS
         // Put intake out and start it

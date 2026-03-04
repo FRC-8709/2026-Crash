@@ -40,7 +40,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 
         public class SensorConsants {
             // Hood CANcoder ID
-            public static final int hoodSensorPort = 23;
+            public static final int hoodEncoderPort = 23;
             public static final int IntakeLiftEncoderPort = 24;
         }
 

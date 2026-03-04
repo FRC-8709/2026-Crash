@@ -43,6 +43,7 @@ public class Shooter extends SubsystemBase {
         this.followerShooterMotor1 = followerShooterMotor1;
         this.followerShooterMotor2 = followerShooterMotor2;
         this.followerShooterMotor3 = followerShooterMotor3;
+
         leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Aligned ));
         followerShooterMotor2.setControl(new Follower(leaderShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed ));

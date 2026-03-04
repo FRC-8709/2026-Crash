@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 // pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 // wpilib imports
@@ -19,29 +23,37 @@ public class Hood extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
+    final DoublePublisher posPub;
 
     //Motor('s)
     private final TalonFX hoodMotor;
+    private final CANcoder hoodEncoder;
 
-    public Hood(TalonFX hoodMotor,  DoubleTopic speedTopic) {
+    private double currentPos;
+
+    public Hood(TalonFX hoodMotor,  DoubleTopic speedTopic, CANcoder hoodEncoder,  DoubleTopic posTopic) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(0.0);
+        posPub = posTopic.publish();
+        posPub.setDefault(0.0);
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        TalonFXConfiguration motorConfig = new TalonFXConfiguration();
+        CANcoderConfiguration CANcoderConfig = new CANcoderConfiguration();
 
-        config.Slot0.kP = 0.08;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
-        config.Slot0.kV = 12;
-        config.Slot0.kS = 0.20;
+        motorConfig.Slot0.kP = 0.08;
+        motorConfig.Slot0.kI = 0.0;
+        motorConfig.Slot0.kD = 0.0;
+        motorConfig.Slot0.kV = 12;
+        motorConfig.Slot0.kS = 0.20;
+        CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
-        hoodMotor.getConfigurator().apply(config);
+        hoodMotor.getConfigurator().apply(motorConfig);
+        hoodEncoder.getConfigurator().apply(CANcoderConfig);
 
         this.hoodMotor = hoodMotor;
+        this.hoodEncoder = hoodEncoder;
 
         hoodMotor.setNeutralMode(NeutralModeValue.Brake);
-
-        //speedPub.set(5.0);
 
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
@@ -52,6 +64,7 @@ public class Hood extends SubsystemBase {
         // Update speed in Network table
         //setMotorSpeedRPS(5);
         speedPub.set(hoodMotor.getVelocity().getValueAsDouble());
+        posPub.set(hoodEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
     /**
@@ -75,7 +88,16 @@ public class Hood extends SubsystemBase {
     /**
      * Stop the shooter motors.
      */
-    public void stopRoller() {
-        hoodMotor.stopMotor();
+    public void stopHood() {
+        hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
+        
+    }
+
+    // spin to position
+    public void goToPosition(double targetPos) {
+        currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
+        while(currentPos > targetPos) {
+            
+        }
     }
 }
