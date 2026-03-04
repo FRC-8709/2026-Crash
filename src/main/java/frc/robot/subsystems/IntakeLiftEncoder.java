@@ -18,25 +18,25 @@ import edu.wpi.first.networktables.DoubleTopic;
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
 
-public class HoodSensor extends SubsystemBase {
+public class IntakeLiftEncoder extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher posPub;
 
-    // Add more follower motors as needed
-    private final CANcoder hoodSensor;
 
-    public HoodSensor(CANcoder hoodSensor,  DoubleTopic posTopic) {
+    private final CANcoder intakeLiftEncoder;
+
+    public IntakeLiftEncoder(CANcoder intakeLiftEncoder,  DoubleTopic posTopic) {
         posPub = posTopic.publish();
-        posPub.setDefault(1.0);
+        posPub.setDefault(0.0);
 
         CANcoderConfiguration config = new CANcoderConfiguration();
 
         config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
-        hoodSensor.getConfigurator().apply(config);
+        intakeLiftEncoder.getConfigurator().apply(config);
 
-        this.hoodSensor = hoodSensor;
+        this.intakeLiftEncoder = intakeLiftEncoder;
 
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
@@ -44,8 +44,6 @@ public class HoodSensor extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        // Update speed in Network table
-        //setMotorSpeedRPS(5);
-        posPub.set(hoodSensor.getAbsolutePosition().getValueAsDouble());
+        posPub.set(intakeLiftEncoder.getAbsolutePosition().getValueAsDouble());
     }
 }

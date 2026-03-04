@@ -36,8 +36,10 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.HoodSensor;
+import frc.robot.subsystems.HoodEncoder;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeLift;
+import frc.robot.subsystems.IntakeLiftEncoder;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.Shooter;
 
@@ -98,9 +100,10 @@ public class RobotContainer {
 
     private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), inst.getDoubleTopic("make")); // Not implemented yet
     
-    private final Hood s_Indexer = new Hood(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2")); // Not implemented yet
-
-    private final HoodSensor s_HoodSensor = new HoodSensor(new CANcoder(Constants.SensorConsants.hoodSensorPort), inst.getDoubleTopic("HoodSensor"));
+    private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2")); // Not implemented yet
+    private final IntakeLiftEncoder s_IntakeLiftEncoder = new IntakeLiftEncoder(new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("IntakeLiftPOS"));
+        
+    private final HoodEncoder s_HoodSensor = new HoodEncoder(new CANcoder(Constants.SensorConsants.hoodSensorPort), inst.getDoubleTopic("HoodSensor"));
 
     private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), inst.getDoubleTopic("LiftPosition"));
     private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"));
@@ -172,7 +175,7 @@ public class RobotContainer {
 
         // INDEXER CONTROLS
         // Turn indexer on/off
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-25)));
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-50)));
         joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
 
         // INTAKE ROLLER CONTROLS

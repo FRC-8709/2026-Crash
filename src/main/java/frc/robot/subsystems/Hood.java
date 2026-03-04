@@ -20,12 +20,12 @@ public class Hood extends SubsystemBase {
     // Network tables stuff
     final DoublePublisher speedPub;
 
-    // Add more follower motors as needed
+    //Motor('s)
     private final TalonFX hoodMotor;
 
     public Hood(TalonFX hoodMotor,  DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
-        speedPub.setDefault(1.0);
+        speedPub.setDefault(0.0);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -38,7 +38,6 @@ public class Hood extends SubsystemBase {
         hoodMotor.getConfigurator().apply(config);
 
         this.hoodMotor = hoodMotor;
-        //this.followerShooterMotor1 = followerShooterMotor1;
 
         hoodMotor.setNeutralMode(NeutralModeValue.Brake);
 
@@ -54,15 +53,6 @@ public class Hood extends SubsystemBase {
         //setMotorSpeedRPS(5);
         speedPub.set(hoodMotor.getVelocity().getValueAsDouble());
     }
-
-    // /**
-    //  * Spin the shooter motors at a given speed.
-    //  * @param RPS Rotations per Second
-    //  */
-    // public void spinRoller() {
-    //     // Publish the RPS to the network table
-    //     hoodMotor.setControl(Constants.IntakeConstants.rollerVelocity);
-    // }
 
     /**
      * Spin the shooter motors at a given speed.
@@ -86,7 +76,6 @@ public class Hood extends SubsystemBase {
      * Stop the shooter motors.
      */
     public void stopRoller() {
-        // Not sure how this works with the followers, experiment a lil
         hoodMotor.stopMotor();
     }
 }

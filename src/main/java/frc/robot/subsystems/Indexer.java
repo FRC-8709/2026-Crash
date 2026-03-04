@@ -25,7 +25,7 @@ public class Indexer extends SubsystemBase {
 
     public Indexer(TalonFX indexerMotor,  DoubleTopic speedTopic) {
         speedPub = speedTopic.publish();
-        speedPub.setDefault(1.0);
+        speedPub.setDefault(0.0);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
