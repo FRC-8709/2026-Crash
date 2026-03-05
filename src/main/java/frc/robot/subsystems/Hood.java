@@ -37,6 +37,26 @@ public class Hood extends SubsystemBase {
         posPub = posTopic.publish();
         posPub.setDefault(0.0);
 
+        // Hi, Ethan here leaving notes for until I get there
+
+        // We want to use either Remote CANcoder or Fused CANcoder
+
+        // Remote: ignore rotor, just use external CANcoder for feedback
+        //      We need: "sensor to mechanism" ratio (usually just 1 in this case)
+        
+        // Fused: use rotor internal encoder and external CANcoder, requires us to
+        //      We need: "rotor to sensor" ratio (motor to shaft CANcoder is on) and "sensor to mechanism" ratio (usually just 1 in this case)
+
+        // Ideally we use Fused, but it requires a little more effort:
+        
+        // Here is the link to the docs:
+        // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/remote-sensors.html
+
+        // ALSO PLEASE LOOK AT MY NOTES FOR "GO TO POSITION" FUNCTION
+        // THAT IS **NOT**, I REPEAT *****NOT***** THE WAY IT SHOULD BE WRITTEN
+        // LOVE YOU GUYS TO DEATH BUT YOU ARE STUCK ON HOW TIME BASED PROGRAMMING WORKS, WE CAN'T
+        // DO STUFF LIKE THAT IN COMMAND BASE
+
         TalonFXConfiguration motorConfig = new TalonFXConfiguration();
         CANcoderConfiguration CANcoderConfig = new CANcoderConfiguration();
 
@@ -94,6 +114,24 @@ public class Hood extends SubsystemBase {
     }
 
     // spin to position
+
+    // THIS IS **NOT**, I REPEAT *****NOT***** THE WAY IT SHOULD BE WRITTEN
+    // LOVE YOU GUYS TO DEATH BUT YOU ARE STUCK ON HOW TIME BASED PROGRAMMING WORKS, WE CAN'T
+    // DO STUFF LIKE THIS IN COMMAND BASE
+
+    // INSTEAD, WE USE PID LOOPS WHICH, DESPITE THE NAME, ARE NOT WHILE OR FOR LOOPS!
+    // WE CANNOT HOLD THE CODE HOSTAGE HERE UNTIL WE LET IT OUT OF THE LOOP, THE ROBOT WILL FREAK OUT
+    // INSTEAD, THE KRAKENS ARE SMART ENOUGH TO HAVE THEIR OWN BUILT IN PID LOOPS, WE JUST GIVE THEM NUMBERS (KP, KI, KD, etc.) AND THEY
+    // CALCULATE WHAT THEY NEED TO DO TO GET TO A CERTAIN SPEED/POSITION
+
+    // PLEASE USE setControl AND PositionVoltage REQUESTS, THAT IS THE ONLY WAY WE SHOULD BE DOING THIS
+    // link to docs so you guys can see their example, we had a hard time getting it to work last week
+    // but you should double check this, because this is quite literally the only CORRECT way to do this
+    // https://v6.docs.ctr-electronics.com/en/latest/docs/api-reference/device-specific/talonfx/basic-pid-control.html#position-control
+
+    // I have a feeling that our PID numbers were just garbage for doing positional control, TRY THEIR EXAMPLE NUMBERS AND SEE IF THAT FIXES IT
+    // Hopefully it does, otherwise keep looking into it until I get there, but I PLEAD WITH YOU DO NOT CONTINUE WITH THIS WHILE LOOP THING
+
     public void goToPosition(double targetPos) {
         currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
         while(currentPos > targetPos) {

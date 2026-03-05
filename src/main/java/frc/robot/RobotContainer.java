@@ -156,6 +156,18 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+        // ETHAN NOTE HERE:
+        // Noticing you guys are experimenting with commands when you let go of a button, totally fine but here is a better way of doing it:
+        // https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html#chaining-calls
+        // Essentially, you can do button.onTrue(command1).onFalse(command2) and that is the same as button.onTrue(command1); button.onFalse(command2)
+        // but it is a little shorter and a little cleaner
+
+        // ALSO:
+        // if you are gonna have 2 buttons do the same command (I don't agree but maybe you want to for some reason), do it this way instead:
+        // https://docs.wpilib.org/en/stable/docs/software/commandbased/binding-commands-to-triggers.html#composing-triggers
+        // This means you can do like button1.and(button2).onTrue(command) for BOTH buttons being pressed
+        // or button1.or(button2).onTrue(command) for EITHER button being pressed, super easy and again, short and clean
+
         // SHOOTER CONTROLS
         // Turn shooter on/off
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
