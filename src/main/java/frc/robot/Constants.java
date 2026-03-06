@@ -51,7 +51,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             public static final int liftMotorPort = 21;
 
             // Speed constants
-            private static final double rollerSpeed = -10;
+            private static final double rollerSpeed = -45;
 
             // Position constants
             // I also totally guessed at these, please update these when appropriate

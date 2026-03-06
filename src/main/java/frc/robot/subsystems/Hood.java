@@ -73,7 +73,7 @@ public class Hood extends SubsystemBase {
         this.hoodMotor = hoodMotor;
         this.hoodEncoder = hoodEncoder;
 
-        hoodMotor.setNeutralMode(NeutralModeValue.Brake);
+        hoodMotor.setNeutralMode(NeutralModeValue.Coast);
 
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
@@ -109,7 +109,9 @@ public class Hood extends SubsystemBase {
      * Stop the shooter motors.
      */
     public void stopHood() {
-        hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
+        //hoodMotor.setControl(new NeutralOut());
+        hoodMotor.stopMotor();
+        //hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
         
     }
 

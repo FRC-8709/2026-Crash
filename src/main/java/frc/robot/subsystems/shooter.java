@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 // pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -31,8 +32,9 @@ public class Shooter extends SubsystemBase {
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     public void updatePIDValues(){
-        config.Slot0.kP = shooterKP.get();
-        config.Slot0.kV = shooterKV.get();
+        // PARKER UNCOMMENT THIS WHEN YOU UPDATE THEM VIA ELASTIC
+        config.Slot0.kP = 0.01; //shooterKP.get();
+        config.Slot0.kV = 8; //shooterKV.get();
         //.01 KP
         //8 KV
         config.Slot0.kI = 0.0;
@@ -59,7 +61,7 @@ public class Shooter extends SubsystemBase {
 
         updatePIDValues();
 
-        leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
+        leaderShooterMotor.setNeutralMode(NeutralModeValue.Brake);
         followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Aligned ));
         followerShooterMotor2.setControl(new Follower(leaderShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed ));
         followerShooterMotor3.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Opposed ));
