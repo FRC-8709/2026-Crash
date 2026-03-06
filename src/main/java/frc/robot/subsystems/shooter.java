@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 
@@ -21,28 +22,42 @@ public class Shooter extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
+    final DoubleEntry shooterKP;
+    final DoubleEntry shooterKV;
 
     // Add more follower motors as needed
     private final TalonFX leaderShooterMotor, followerShooterMotor1, followerShooterMotor2, followerShooterMotor3;
 
-    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, TalonFX followerShooterMotor2, TalonFX followerShooterMotor3 , DoubleTopic speedTopic) {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+
+    public void updatePIDValues(){
+        config.Slot0.kP = shooterKP.get();
+        config.Slot0.kV = shooterKV.get();
+        //.01 KP
+        //8 KV
+        config.Slot0.kI = 0.0;
+        config.Slot0.kD = 0.0;
+        config.Slot0.kS = 0.0;
+
+        leaderShooterMotor.getConfigurator().apply(config);
+    }
+
+    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, TalonFX followerShooterMotor2, TalonFX followerShooterMotor3 , DoubleTopic speedTopic, DoubleTopic shooterKPTopic, DoubleTopic shooterKVTopic) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(0.0);
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
+        shooterKP = shooterKPTopic.getEntry(0);
+        shooterKV = shooterKVTopic.getEntry(0);
 
-        config.Slot0.kP = 0.08;
-        config.Slot0.kI = 0.0;
-        config.Slot0.kD = 0.0;
-        config.Slot0.kV = 12;
-        config.Slot0.kS = 0.20;
-
-        leaderShooterMotor.getConfigurator().apply(config);
+        shooterKP.set(0);
+        shooterKV.set(0);
 
         this.leaderShooterMotor = leaderShooterMotor;
         this.followerShooterMotor1 = followerShooterMotor1;
         this.followerShooterMotor2 = followerShooterMotor2;
         this.followerShooterMotor3 = followerShooterMotor3;
+
+        updatePIDValues();
 
         leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Aligned ));

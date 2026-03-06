@@ -7,7 +7,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.DoubleTopic;
 
 // custom file imports
@@ -17,23 +19,39 @@ public class IntakeRoller extends SubsystemBase {
 
     // Network tables stuff
     final DoublePublisher speedPub;
+    final DoubleEntry rollerKP;
+    final DoubleEntry rollerKV;
 
     // Add more follower motors as needed
     private final TalonFX rollerMotor;
 
-    public IntakeRoller(TalonFX rollerMotor,  DoubleTopic speedTopic) {
-        speedPub = speedTopic.publish();
-        speedPub.setDefault(1.0);
+    TalonFXConfiguration config = new TalonFXConfiguration();
 
-        TalonFXConfiguration config = new TalonFXConfiguration();
-
-        config.Slot0.kP = 0.08;
+    public void updatePIDValues(){
+        config.Slot0.kP = rollerKP.get();
+        config.Slot0.kV = rollerKV.get();
+        
         config.Slot0.kI = 0.0;
         config.Slot0.kD = 0.0;
-        config.Slot0.kV = 12;
-        config.Slot0.kS = 0.20;
+        config.Slot0.kS = 0.0;
 
         rollerMotor.getConfigurator().apply(config);
+    }
+
+    public IntakeRoller(TalonFX rollerMotor,  DoubleTopic speedTopic, DoubleTopic rollerKPTopic, DoubleTopic rollerKVTopic ) {
+        rollerKP = rollerKPTopic.getEntry(0);
+        rollerKV = rollerKVTopic.getEntry(0);
+
+
+
+        
+        rollerKP.set(0);
+        rollerKV.set(0);
+
+        
+        
+        speedPub = speedTopic.publish();
+        speedPub.setDefault(1.0);
 
         this.rollerMotor = rollerMotor;
         //this.followerShooterMotor1 = followerShooterMotor1;
@@ -41,7 +59,7 @@ public class IntakeRoller extends SubsystemBase {
         rollerMotor.setNeutralMode(NeutralModeValue.Coast);
 
         //speedPub.set(5.0);
-
+        updatePIDValues();
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
 

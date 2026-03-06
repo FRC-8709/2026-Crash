@@ -8,11 +8,13 @@ package frc.robot;
 // This was kept seperate for some reason so I'm just leaving it like this
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 // pheonix6 imports
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 // wpilib imports
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -86,10 +88,18 @@ public class RobotContainer {
     private final JoystickButton joystickRight2Button10 = new JoystickButton(joystickRight2, 10);
     private final JoystickButton joystickRight2Button12 = new JoystickButton(joystickRight2, 12);
 
-    // Indexer Contrl Buttons
+    // Indexer Control Buttons
     private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
     private final JoystickButton joystickLeft2Button3 = new JoystickButton(joystickLeft2, 3);
     private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
+
+    //Intake Controls
+    private final JoystickButton joystickright1Button6 = new JoystickButton(joystickRight1,6 );
+    private final JoystickButton joystickRight1Button8 = new JoystickButton(joystickRight1, 8);
+    private final JoystickButton joystickRight1Button10 = new JoystickButton(joystickRight1, 10);
+    private final JoystickButton joystickRight1Button12 = new JoystickButton(joystickRight1, 12);
+    private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
+
 
     // Subsystem instance declaration
     private final Agitator s_Agitator = new Agitator(); // Not implemented yet
@@ -99,12 +109,14 @@ public class RobotContainer {
     private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2"));
         
     private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("LiftPosition"));
-    private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"));
+    private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"), inst.getDoubleTopic("RollerKP"), inst.getDoubleTopic("RollerKV"));
 
-    private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("RPS"));
+    private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"));
 
     // Swerve instance declaration
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
 
     public RobotContainer() {
         // Set up which buttons do what
@@ -168,6 +180,11 @@ public class RobotContainer {
         // This means you can do like button1.and(button2).onTrue(command) for BOTH buttons being pressed
         // or button1.or(button2).onTrue(command) for EITHER button being pressed, super easy and again, short and clean
 
+
+
+        //PID TUNING CONTROLS
+        joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_IntakeRoller.updatePIDValues()));
+
         // SHOOTER CONTROLS
         // Turn shooter on/off
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
@@ -176,26 +193,30 @@ public class RobotContainer {
 
 
         // HOOD CONTROLS
-        joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(3)));
-        joystickRight2Button8.onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(3))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
         joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
-        joystickRight2Button12.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-3)));
-        joystickRight2Button12.onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickRight2Button12.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-3))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+
         
         // INDEXER CONTROLS
         // Turn indexer on/off
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-50)));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10)));
-        joystickLeft2Button5.onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
-        joystickLeft2Button3.onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-50))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        
+        
 
         // INTAKE ROLLER CONTROLS
         // Put intake out and start it
         // something kind of like
-        //joystickLeft2Button5.onTrue(new startRollers(s_IntakeRoller));
-        //joystickLeft2Button3.onTrue(new stopRollers(s_IntakeRoller));
+        joystickright1Button6.onTrue(new startRollers(s_IntakeRoller));
+        joystickright1Button6.onFalse(new stopRollers(s_IntakeRoller));
         //button.onTrue(new lowerLift().andThen(new startRollers()));
         //INTAKE LIFT
+        joystickRight1Button8.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(3))).onFalse(Commands.runOnce(()-> s_IntakeLift.stopLift()));
+        joystickRight1Button10.onTrue(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+        joystickRight1Button12.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-3))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+
+
         //joystickLeft2Button5.onTrue(new raiseLift(s_IntakeLift));
         //joystickLeft2Button3.onTrue(new lowerLift(s_IntakeLift));
         //joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));

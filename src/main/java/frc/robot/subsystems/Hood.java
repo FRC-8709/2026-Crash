@@ -134,8 +134,6 @@ public class Hood extends SubsystemBase {
 
     public void goToPosition(double targetPos) {
         currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
-        while(currentPos > targetPos) {
-            
-        }
+  
     }
 }

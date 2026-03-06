@@ -15,7 +15,7 @@ public class raiseLift extends Command {
     @Override
     public void initialize() {
         // Tell the PID to move the lift to the "up" position
-        s_IntakeLift.raiseLift();
+       // s_IntakeLift.raiseLift();
     }
     
     @Override
