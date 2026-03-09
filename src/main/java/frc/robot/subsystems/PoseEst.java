@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 // pheonix6 imports
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -14,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.units.AngleUnit;
@@ -33,24 +36,14 @@ public class PoseEst extends SubsystemBase {
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
 
-    
-    private Pose2d getPose2d(){
-        return drivetrain.getState().Pose;
-    }
-
-    private double getRotation(){
-        return getPose2d().getRotation().getDegrees();
-    }
-
-    public PoseEst(CommandSwerveDrivetrain drivetrain, Pigeon2 gyro) {
+    public PoseEst(CommandSwerveDrivetrain drivetrain, Pigeon2 gyro, DoubleTopic distancePos, DoubleTopic posX, DoubleTopic posY) {
         this.drivetrain = drivetrain;
         this.gyro = gyro;
-    }
 
-    public void LimelightDistance(DoubleTopic distancePos, DoubleTopic posX, DoubleTopic posY) {
         distancePub = distancePos.publish();
         posXPub = posX.publish();
         posYPub = posY.publish();
+
         distancePub.setDefault(0.0);
         posXPub.setDefault(0.0);
         posYPub.setDefault(0.0);
@@ -78,4 +71,51 @@ public class PoseEst extends SubsystemBase {
                 mt2.timestampSeconds);
         }
     }
+    
+    private Pose2d getPose2d(){
+        return drivetrain.getState().Pose;
+    }
+
+    private double getRotation(){
+        return getPose2d().getRotation().getDegrees();
+    }
+
+    /* Publishes these values to network tables
+     * posXPub is x distance from (0,0), which is the blue right corner in inches
+     * posYPub is the y distance from (0,0) in inches
+     * distancePub is the distance (as a straight line!) from (0,0) in inches
+     */
+    public void LimelightDistance() {
+        // Pose2d = translation (position) & rotation
+        // We just want the translation for this so I'll pulling that out directly
+        Translation2d translation;
+        double x, y, distance;
+
+        // Get just the translation
+        translation = getPose2d().getTranslation();
+
+        // Find x and y
+        x = translation.getMeasureX().in(Inches);
+        y = translation.getMeasureY().in(Inches);
+
+        // How far are we from the origin? Need to make a new translation at (0,0) for it to find out
+        // This returns a double and not a measurement like the other ones do
+        // So not sure if this is accurate or what units it is in, we might end up calculating the distance ourself
+        // if we want it to be accurate, cause I think the default is meters
+        // Or maybe not who cares, life is precious and time is fleeting so do whatever you want
+        distance = translation.getDistance(new Translation2d(0,0));
+
+        // I'm just gonna show you how to calculate it yourself IF YOU WANTED TO KNOW
+        // Of course we have a right triangle here so our distance is "d = sqrt(x^2 + y^2)" which is this in java:
+        //distance = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+        // sqrt is of course square root
+        // pow is exponents, so in this case its Math.pow(a,b) = a^b, or Math.pow(x,2) = x^2
+        // That line actually works so if you want to use that instead just uncomment it
+
+        // Publish the values
+        posXPub.set(x);
+        posYPub.set(y);
+        distancePub.set(distance);
+    }
+
 }
