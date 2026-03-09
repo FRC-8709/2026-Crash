@@ -30,6 +30,9 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
 
+    //Limeligt positions
+    private DoublePublisher distancePub, posXPub, posYPub;
+
     
     private Pose2d getPose2d(){
         return drivetrain.getState().Pose;
@@ -42,6 +45,15 @@ public class PoseEst extends SubsystemBase {
     public PoseEst(CommandSwerveDrivetrain drivetrain, Pigeon2 gyro) {
         this.drivetrain = drivetrain;
         this.gyro = gyro;
+    }
+
+    public void LimelightDistance(DoubleTopic distancePos, DoubleTopic posX, DoubleTopic posY) {
+        distancePub = distancePos.publish();
+        posXPub = posX.publish();
+        posYPub = posY.publish();
+        distancePub.setDefault(0.0);
+        posXPub.setDefault(0.0);
+        posYPub.setDefault(0.0);
     }
 
     @Override

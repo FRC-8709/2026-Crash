@@ -41,6 +41,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.IntakeRoller;
+import frc.robot.subsystems.PoseEst;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
@@ -112,6 +113,10 @@ public class RobotContainer {
     private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"), inst.getDoubleTopic("RollerKP"), inst.getDoubleTopic("RollerKV"));
 
     private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"));
+
+     private final PoseEst s_PoseEst = new limelightDistance(inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
+    //private final PoseEst s_PoseEst = 
+
 
     // Swerve instance declaration
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
