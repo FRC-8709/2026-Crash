@@ -21,4 +21,22 @@ public class Conversions {
         // RPS = RPM*60
         return(RPS*60);
     }
+
+    /**
+    *Convert meters to feet
+    *@param Meters
+    *@return Feet
+    **/
+    public final static double MetersToFeet(double Meters) {
+        return(Meters*3.2808);
+    }
+
+    /**
+    *Convert meters to inches
+    *@param Meters
+    *@return Inches
+    **/
+    public final static double MetersToinches(double Meters) {
+        return(Meters*39.3701);
+    }
 }

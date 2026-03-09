@@ -27,7 +27,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
         public class HoodConstants {
             // Hood CAN ids
             public static final int hoodMotorPort = 19;
-        //-.16 for a hood position close up speed 75
+        //-.16 -0.177001953125 for a hood position close up speed 75
             public static final VelocityVoltage hoodVelocity = new VelocityVoltage(0);
         }
 

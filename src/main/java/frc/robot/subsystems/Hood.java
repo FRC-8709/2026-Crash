@@ -110,8 +110,8 @@ public class Hood extends SubsystemBase {
      */
     public void stopHood() {
         //hoodMotor.setControl(new NeutralOut());
-        hoodMotor.stopMotor();
-        //hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
+        //hoodMotor.stopMotor();
+        hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
         
     }
 
