@@ -101,6 +101,13 @@ public class RobotContainer {
     private final JoystickButton joystickRight1Button12 = new JoystickButton(joystickRight1, 12);
     private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
 
+    
+
+    // Swerve instance declaration
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
+
+
 
     // Subsystem instance declaration
     private final Agitator s_Agitator = new Agitator(); // Not implemented yet
@@ -114,14 +121,9 @@ public class RobotContainer {
 
     private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"));
 
-     private final PoseEst s_PoseEst = new limelightDistance(inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
-    //private final PoseEst s_PoseEst = 
+    private final PoseEst s_PoseEst = new PoseEst(drivetrain, gyro, inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
 
 
-    // Swerve instance declaration
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-    public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
 
     public RobotContainer() {
         // Set up which buttons do what
