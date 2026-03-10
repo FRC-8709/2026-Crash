@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meter;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 // pheonix6 imports
@@ -17,10 +18,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+
 // custom imports
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
@@ -118,4 +122,63 @@ public class PoseEst extends SubsystemBase {
         distancePub.set(distance);
     }
 
+    private Translation3d getDistanceFromGoal() {
+        Translation2d robotPosition2d;
+        Translation3d robotPosition3d, distanceFromGoal;
+
+        // Get the 2d position
+        robotPosition2d = getPose2d().getTranslation();
+        // Now go up by shooterHeight inches
+        robotPosition3d = new Translation3d(robotPosition2d).plus(new Translation3d(Inches.of(0), Inches.of(0), Constants.ShooterConstants.shooterHeight));
+
+        // Find the difference between the robot and the goal
+        // Might have this backwards, check later
+        return Constants.FieldConstants.goalPosition.minus(robotPosition3d);
+    }
+
+    /* Function to calculate the launch angle of the ball based on the distance and current flywheel velocity
+     * Ideally we actually give a number here but I'll hardcode it just because
+     * https://en.wikipedia.org/wiki/Projectile_motion#Angle_%CE%B8_required_to_hit_coordinate_(x,_y)
+     */
+    public Angle calculateLaunchAngle() {
+        // I'm going to break this up into a couple smaller pieces so the math doesn't look gross
+        double x, y, z;
+        double a, b, c;
+        double angleInRadians;
+        Angle launchAngle;
+
+        // Gravity in m/s^2, gonna do all of the math in m/s^2
+        double g = 9.81;
+
+        // Need to find distance between where we are now and the goal
+        Translation3d translationFromGoal = getDistanceFromGoal();
+        x = translationFromGoal.getMeasureX().in(Meter);
+        y = translationFromGoal.getMeasureY().in(Meter);
+        z = translationFromGoal.getMeasureZ().in(Meter);
+
+        // The math needs the DISTANCE between the robot and the goal, in terms of horizontal (hypotenuse of x and y) and vertical distance (z)
+        double horizontal_distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+        // This comes up a couple times so just declaring it here
+        double velocity_squared = Math.pow(Constants.ShooterConstants.shooterSpeed, 2);
+        
+
+        // For the math, x is actually the horizontal distance, and y is z
+        // I know this is confusing but the wikipedia equation was written for 2d and not 3d
+        // I'm making do with what I got here ok
+
+        // a = g^2*x^2
+        // b = 2*g*y*v^2
+        a = Math.pow(g, 2) * Math.pow(horizontal_distance, 2);
+        b = 2 * g * z * velocity_squared;
+
+        c = (velocity_squared + Math.sqrt(Math.pow(velocity_squared, 2) - (a + b)))/(g*horizontal_distance);
+
+        // Angle in radians
+        angleInRadians = Math.atan(c);
+        launchAngle = Units.Radians.of(angleInRadians);
+
+        // If we return it as an angle, we can get it in degrees or radians
+        return launchAngle;
+    }
 }

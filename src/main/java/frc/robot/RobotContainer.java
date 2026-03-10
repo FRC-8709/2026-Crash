@@ -187,14 +187,13 @@ public class RobotContainer {
         // This means you can do like button1.and(button2).onTrue(command) for BOTH buttons being pressed
         // or button1.or(button2).onTrue(command) for EITHER button being pressed, super easy and again, short and clean
 
-
-
         //PID TUNING CONTROLS
         joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_IntakeRoller.updatePIDValues()));
 
         // SHOOTER CONTROLS
         // Turn shooter on/off
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
+        //joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
         //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
 

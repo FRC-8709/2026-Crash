@@ -5,6 +5,10 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.math.geometry.Translation3d;
+
+// ?????? what is this
 import frc.robot.command.IntakeCommands.startRollers;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -21,7 +25,14 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             // Object for speed control
             // Eventually we might want to do something similar to what I did with the rollerVelocity,
             // but for now this is fine
-            public static final VelocityVoltage shooterVelocity = new VelocityVoltage(0);
+
+            // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
+            public static final double shooterSpeed = -75;
+
+            public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
+            
+            // Shooter height from ground, in inches
+            public static final Distance shooterHeight = Units.Inches.of(10);
         }
 
         public class HoodConstants {
@@ -70,5 +81,12 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             //-.35 for the out position on the encoder 
             //.35 for the up position 
             public static final PositionVoltage liftPosition = new PositionVoltage(0);
+        }
+
+        public class FieldConstants {
+            // Where is the goal on the field?
+            // Make a blue goal and a red goal, right now this is just for testing
+            // Also actually add the real position, I just made this up for testing
+            public static final Translation3d goalPosition = new Translation3d(Units.Inches.of(3), Units.Inches.of(5), Units.Inches.of(7));
         }
 }

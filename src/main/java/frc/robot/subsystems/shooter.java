@@ -95,6 +95,15 @@ public class Shooter extends SubsystemBase {
     }
 
     /**
+     * Spin the shooter motors at a given speed.
+     * @param RPS Rotations per Second
+     */
+    private void spinShooter() {
+        // Publish the RPS to the network table
+        leaderShooterMotor.setControl(Constants.ShooterConstants.shooterVelocity);
+    }
+
+    /**
      * Stop the shooter motors.
      */
     public void stopMotors() {
