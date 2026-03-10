@@ -61,7 +61,7 @@ public class Shooter extends SubsystemBase {
 
         updatePIDValues();
 
-        leaderShooterMotor.setNeutralMode(NeutralModeValue.Brake);
+        leaderShooterMotor.setNeutralMode(NeutralModeValue.Coast);
         followerShooterMotor1.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Aligned ));
         followerShooterMotor2.setControl(new Follower(leaderShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed ));
         followerShooterMotor3.setControl(new Follower(leaderShooterMotor.getDeviceID(),  MotorAlignmentValue.Opposed ));

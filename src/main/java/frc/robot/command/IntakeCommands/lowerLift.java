@@ -8,7 +8,7 @@ public class lowerLift extends Command {
 
     public lowerLift(IntakeLift s_IntakeLift){
         this.s_IntakeLift = s_IntakeLift;
-
+        
         addRequirements(s_IntakeLift);
     }
 

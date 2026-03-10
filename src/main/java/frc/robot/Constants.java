@@ -57,6 +57,10 @@ import com.ctre.phoenix6.controls.PositionVoltage;
         }
 
         public class IntakeConstants {
+          //Position values for intake 
+            public static final double topPosition = .35;
+            public static final double outPosition = -.35;
+
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
             public static final int liftMotorPort = 21;

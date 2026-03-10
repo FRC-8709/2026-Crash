@@ -192,8 +192,8 @@ public class RobotContainer {
 
         // SHOOTER CONTROLS
         // Turn shooter on/off
-        //joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(-75)));
+        //joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
         //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
         joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
 
@@ -218,15 +218,15 @@ public class RobotContainer {
         joystickright1Button6.onFalse(new stopRollers(s_IntakeRoller));
         //button.onTrue(new lowerLift().andThen(new startRollers()));
         //INTAKE LIFT
-        joystickRight1Button8.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(3))).onFalse(Commands.runOnce(()-> s_IntakeLift.stopLift()));
+        //joystickRight1Button8.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(3))).onFalse(Commands.runOnce(()-> s_IntakeLift.stopLift()));
         joystickRight1Button10.onTrue(Commands.runOnce(() -> s_IntakeLift.stopLift()));
-        joystickRight1Button12.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-3))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+        //joystickRight1Button12.onTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-3))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
 
 
-        //joystickLeft2Button5.onTrue(new raiseLift(s_IntakeLift));
-        //joystickLeft2Button3.onTrue(new lowerLift(s_IntakeLift));
-        //joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));
-        //joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_IntakeLift.lowerLift()));
+        //joystickRight1Button8.onTrue(new raiseLift(s_IntakeLift));
+        //joystickRight1Button12.onTrue(new lowerLift(s_IntakeLift));
+        joystickRight1Button8.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));
+        joystickRight1Button12.onTrue(Commands.runOnce(() -> s_IntakeLift.lowerLift()));
 
     }
 

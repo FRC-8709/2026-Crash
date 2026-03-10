@@ -5,15 +5,13 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // custom imports
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
@@ -49,7 +47,7 @@ public class IntakeLift extends SubsystemBase {
         motorConfig.Slot0.kP = 0.08;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
-        motorConfig.Slot0.kV = 12;
+        motorConfig.Slot0.kV = 2;
         motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
@@ -74,6 +72,7 @@ public class IntakeLift extends SubsystemBase {
         // This method will be called once per scheduler run
         // Update speed in Network table
         //setMotorSpeedRPS(5);
+        SmartDashboard.putNumber("lift value", liftMotor.getPosition().getValueAsDouble());
         positionPub.set(liftEncoder.getAbsolutePosition().getValueAsDouble());
     }
 
@@ -106,16 +105,16 @@ public class IntakeLift extends SubsystemBase {
      * Lower the intake, extend it out over the bumpers.
      * This lets it pick up fuel, YOU SHOULD NOT SPIN THE ROLLER WITHOUT DOING THIS!
      */
-   // public void lowerLift() {
+   public void lowerLift() {
         // THIS WORKS WITH WHOLE NUMBERS BUT NOT DECIMALS FOR SOME REASON??? GOING TO LOSE MY MIND
-       // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(-0.5));
-    //}
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(-55.715));
+    }
 
     /**
      * Bring the intake back up into the robot.
      * THE INTAKE SHOULD BE STOPPED ALREADY!
      */
-   // public void raiseLift() {
-        //liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(0.5));
-    //}
+    public void raiseLift() {
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(4.737));
+    }
 }
