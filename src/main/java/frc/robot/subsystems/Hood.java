@@ -64,8 +64,8 @@ public class Hood extends SubsystemBase {
         motorConfig.Slot0.kP = 0.08;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
-        //motorConfig.Slot0.kV = 12;
-        //motorConfig.Slot0.kS = 0.20;
+        motorConfig.Slot0.kV = 12;
+        motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
         hoodMotor.getConfigurator().apply(motorConfig);
@@ -94,35 +94,35 @@ public class Hood extends SubsystemBase {
      * Spin the shooter motors at a given speed.
      * @param RPM Rotations per Minute
      */
-    /*
+    
     public void setMotorSpeedRPM(double RPM) {
         // Convert RPM to RPS and then call setMotorSpeedRPS function
         setMotorSpeedRPS(Conversions.RPMtoRPS(RPM));
     }
-    */
+    
 
     /**
      * Spin the shooter motors at a given speed.
      * @param RPS Rotations per Second
      */
-    /*
+    
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(RPS));
     }
-    */
+    
 
     /**
      * Stop the shooter motors.
      */
-    /*
+    
     public void stopHood() {
         //hoodMotor.setControl(new NeutralOut());
         //hoodMotor.stopMotor();
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
         
     }
-    */
+    
 
     // spin to position
 

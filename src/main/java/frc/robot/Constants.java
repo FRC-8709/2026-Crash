@@ -21,7 +21,7 @@ import edu.wpi.first.units.measure.Distance;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = -72;
+            public static final double shooterSpeed = -95;
             public static final double autonShooterSpeed = -72;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
@@ -34,6 +34,12 @@ import edu.wpi.first.units.measure.Distance;
         public class HoodConstants {
             // Hood CAN ids
             public static final int hoodMotorPort = 19;
+            
+            public static final double upPosition = 4.737;
+            public static final double middlePosition = -20.0;
+            public static final double downPosition = -48.5;
+
+
         //-.16 -0.177001953125 for a hood position close up speed 75
             public static final VelocityVoltage hoodVelocity = new VelocityVoltage(0);
         }
@@ -56,7 +62,7 @@ import edu.wpi.first.units.measure.Distance;
           //Position values for intake 
             public static final double upPosition = 4.737;
             public static final double middlePosition = -20.0;
-            public static final double downPosition = -47.2;
+            public static final double downPosition = -48.5;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;

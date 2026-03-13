@@ -93,7 +93,7 @@ public class RobotContainer {
     // I don't love this setup, it feels like there should be a better way but I am just gonna leave it
 
     // Swerve Buttons
-    private final JoystickButton joystickLeft1Button4 = new JoystickButton(joystickLeft1, 4);
+    private final JoystickButton joystickLeft1Button5 = new JoystickButton(joystickLeft1, 4);
     private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
     private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
 
@@ -102,9 +102,9 @@ public class RobotContainer {
     private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
 
     // Hood Control Buttons
-    private final JoystickButton joystickRight2Button8 = new JoystickButton(joystickRight2, 8);
+    private final JoystickButton joystickLeft1Button6 = new JoystickButton(joystickLeft1, 6);
     private final JoystickButton joystickRight2Button10 = new JoystickButton(joystickRight2, 10);
-    private final JoystickButton joystickRight2Button12 = new JoystickButton(joystickRight2, 12);
+    private final JoystickButton joystickLeft1Button4 = new JoystickButton(joystickLeft1, 4);
 
     // Indexer Control Buttons
     private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
@@ -185,7 +185,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystickLeft1Button4.whileTrue(drivetrain.applyRequest(() -> brake));
+        joystickLeft1Button5.whileTrue(drivetrain.applyRequest(() -> brake));
 
         /*
         // Ethan here,
@@ -235,11 +235,11 @@ public class RobotContainer {
 
 
         // HOOD CONTROLS
-        /*
-        joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(3))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
+        /**/
+        joystickLeft1Button6.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(6))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
         joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
-        joystickRight2Button12.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-3))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
-        */
+        joystickLeft1Button4.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-6))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        
         // go to position
         // joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.goToPositionElastic()));
         
