@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meter;
 
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -24,7 +26,7 @@ import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // custom imports
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
@@ -55,25 +57,41 @@ public class PoseEst extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+        // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
+        //LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+        LimelightHelpers.SetIMUMode("limelight", 3);
+
+        //doRejectUpdate = false;
    
         // if our angular velocity is greater than 360 degrees per second, ignore vision updates
+        /*
         if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360)
         {
             doRejectUpdate = true;
         }
+         */
+        /*
         if(mt2.tagCount == 0)
         {
             doRejectUpdate = true;
         }
-        if(!doRejectUpdate)
-        {
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        */
+        //if(!doRejectUpdate)
+        //{
+            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
             drivetrain.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds);
-        }
+        //}
+
+        // setting robot rotation in elastic
+        SmartDashboard.putNumber("Robot rotation", getRotation());
+        SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle().in(Degree));
+        LimelightDistance();
     }
     
     private Pose2d getPose2d(){
@@ -180,5 +198,28 @@ public class PoseEst extends SubsystemBase {
 
         // If we return it as an angle, we can get it in degrees or radians
         return launchAngle;
+    }
+
+    // What angle does the robot need to face to look at the goal?
+    public Angle getGoalFacingAngle() {
+        Angle goalFacingAngle;
+
+        Translation2d goalTranslation2d, robotTranslation2d, diffTranslation2d;
+
+        // Where is the robot on the field? (x,y only)
+        robotTranslation2d = getPose2d().getTranslation();
+
+        // Where is the goal? (x,y)
+        goalTranslation2d = Constants.FieldConstants.goalPosition.toTranslation2d();
+
+        // What is the difference between the two? (xgoal - xrobot, ygoal-yrobot)
+        diffTranslation2d = goalTranslation2d.minus(robotTranslation2d);
+
+        // What angle does this make with the x axis?
+        // This actually uses trig but it has a function to do the math for us so we're just gonna use this
+        //goalFacingAngle = diffTranslation2d.getAngle();
+        goalFacingAngle = Units.Radians.of(Math.atan2(diffTranslation2d.getY(), diffTranslation2d.getX()));
+
+        return goalFacingAngle;
     }
 }

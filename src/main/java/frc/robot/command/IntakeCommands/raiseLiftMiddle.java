@@ -3,10 +3,10 @@ package frc.robot.command.IntakeCommands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeLift;
 
-public class raiseLift extends Command {
-    private IntakeLift s_IntakeLift;
+public class raiseLiftMiddle extends Command {
+     private IntakeLift s_IntakeLift;
 
-    public raiseLift(IntakeLift s_IntakeLift){
+    public raiseLiftMiddle(IntakeLift s_IntakeLift){
         this.s_IntakeLift = s_IntakeLift;
 
         addRequirements(s_IntakeLift);
@@ -15,7 +15,7 @@ public class raiseLift extends Command {
     @Override
     public void initialize() {
         // Tell the PID to move the lift to the "up" position
-        s_IntakeLift.raiseLift();
+        s_IntakeLift.raiseLiftMiddle();
     }
     
     @Override
@@ -45,4 +45,3 @@ public class raiseLift extends Command {
         return true;
     }
 }
-

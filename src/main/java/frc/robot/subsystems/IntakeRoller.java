@@ -44,9 +44,10 @@ public class IntakeRoller extends SubsystemBase {
 
 
 
-        
-        rollerKP.set(0);
-        rollerKV.set(0);
+        //.01
+        //.55
+        rollerKP.set(0.01);
+        rollerKV.set(0.55);
 
         
         

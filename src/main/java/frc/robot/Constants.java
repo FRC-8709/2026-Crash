@@ -32,7 +32,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
             // Shooter height from ground, in inches
-            public static final Distance shooterHeight = Units.Inches.of(10);
+            // Added 3 inches for ball radius, actual robot height 25"
+            public static final Distance shooterHeight = Units.Inches.of(28);
         }
 
         public class HoodConstants {
@@ -58,15 +59,16 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 
         public class IntakeConstants {
           //Position values for intake 
-            public static final double topPosition = .35;
-            public static final double outPosition = -.35;
+            public static final double upPosition = 4.737;
+            public static final double middlePosition = -20.0;
+            public static final double downPosition = -47.2;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
             public static final int liftMotorPort = 21;
 
             // Speed constants
-            private static final double rollerSpeed = -45;
+            private static final double rollerSpeed = -10;
 
             // Position constants
             // I also totally guessed at these, please update these when appropriate
@@ -91,6 +93,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             // Where is the goal on the field?
             // Make a blue goal and a red goal, right now this is just for testing
             // Also actually add the real position, I just made this up for testing
-            public static final Translation3d goalPosition = new Translation3d(Units.Inches.of(3), Units.Inches.of(5), Units.Inches.of(7));
+            public static final Translation3d goalPosition = new Translation3d(Units.Inches.of(182.11), Units.Inches.of(158.84), Units.Inches.of(72));
         }
 }

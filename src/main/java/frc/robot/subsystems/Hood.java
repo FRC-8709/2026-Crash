@@ -12,9 +12,10 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 
 // wpilib imports
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // custom file imports
 import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
@@ -63,12 +64,14 @@ public class Hood extends SubsystemBase {
         motorConfig.Slot0.kP = 0.08;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
-        motorConfig.Slot0.kV = 12;
-        motorConfig.Slot0.kS = 0.20;
+        //motorConfig.Slot0.kV = 12;
+        //motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
         hoodMotor.getConfigurator().apply(motorConfig);
         hoodEncoder.getConfigurator().apply(CANcoderConfig);
+
+        hoodMotor.setPosition(0);
 
         this.hoodMotor = hoodMotor;
         this.hoodEncoder = hoodEncoder;
@@ -91,29 +94,35 @@ public class Hood extends SubsystemBase {
      * Spin the shooter motors at a given speed.
      * @param RPM Rotations per Minute
      */
+    /*
     public void setMotorSpeedRPM(double RPM) {
         // Convert RPM to RPS and then call setMotorSpeedRPS function
         setMotorSpeedRPS(Conversions.RPMtoRPS(RPM));
     }
+    */
 
     /**
      * Spin the shooter motors at a given speed.
      * @param RPS Rotations per Second
      */
+    /*
     private void setMotorSpeedRPS(double RPS) {
         // Publish the RPS to the network table
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(RPS));
     }
+    */
 
     /**
      * Stop the shooter motors.
      */
+    /*
     public void stopHood() {
         //hoodMotor.setControl(new NeutralOut());
         //hoodMotor.stopMotor();
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
         
     }
+    */
 
     // spin to position
 
@@ -134,8 +143,12 @@ public class Hood extends SubsystemBase {
     // I have a feeling that our PID numbers were just garbage for doing positional control, TRY THEIR EXAMPLE NUMBERS AND SEE IF THAT FIXES IT
     // Hopefully it does, otherwise keep looking into it until I get there, but I PLEAD WITH YOU DO NOT CONTINUE WITH THIS WHILE LOOP THING
 
+    public void goToPositionElastic() {
+        goToPosition(SmartDashboard.getNumber("Hood go to pos", 0.1));
+    }
+
     public void goToPosition(double targetPos) {
         currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
-  
+        hoodMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(targetPos));
     }
 }

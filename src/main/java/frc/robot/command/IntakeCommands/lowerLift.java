@@ -15,7 +15,7 @@ public class lowerLift extends Command {
     @Override
     public void initialize() {
         // Tell the PID to move the lift to the "down" position
-        //s_IntakeLift.lowerLift();
+        s_IntakeLift.lowerLift();
     }
     
     @Override
@@ -43,7 +43,7 @@ public class lowerLift extends Command {
 
         // Replace this with the "did we go far enough" condition
         //return (liftMotor.position >= liftOut);
-        return true;
+        return (s_IntakeLift.isLowered());
     }
 }
 

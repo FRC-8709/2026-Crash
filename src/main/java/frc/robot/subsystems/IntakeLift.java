@@ -44,11 +44,11 @@ public class IntakeLift extends SubsystemBase {
 
         // Dummy numbers! Please tune!
         // Tune like arm for POSITION CONTROL (PositionVoltage)
-        motorConfig.Slot0.kP = 0.08;
+        motorConfig.Slot0.kP = 0.15;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
-        motorConfig.Slot0.kV = 2;
-        motorConfig.Slot0.kS = 0.20;
+        //motorConfig.Slot0.kV = 2;
+        //motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
 
@@ -56,8 +56,8 @@ public class IntakeLift extends SubsystemBase {
         liftConfig.Slot0.kP = 0.3;
         liftConfig.Slot0.kI = 0.0;
         liftConfig.Slot0.kD = 0.05;
-        liftConfig.Slot0.kV = 0.15;
-        liftConfig.Slot0.kS = 0.0;
+        //liftConfig.Slot0.kV = 0.15;
+        //liftConfig.Slot0.kS = 0.0;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
         liftMotor.getConfigurator().apply(motorConfig);
@@ -107,7 +107,7 @@ public class IntakeLift extends SubsystemBase {
      */
    public void lowerLift() {
         // THIS WORKS WITH WHOLE NUMBERS BUT NOT DECIMALS FOR SOME REASON??? GOING TO LOSE MY MIND
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(-55.715));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.downPosition));
     }
 
     /**
@@ -115,6 +115,14 @@ public class IntakeLift extends SubsystemBase {
      * THE INTAKE SHOULD BE STOPPED ALREADY!
      */
     public void raiseLift() {
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(4.737));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.upPosition));
+
+    }
+    public void raiseLiftMiddle() {
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
+
+    }
+    public boolean isLowered() {
+        return (liftMotor.getPosition().getValueAsDouble() < -40.0f);
     }
 }
