@@ -58,6 +58,8 @@ public class PoseEst extends SubsystemBase {
     @Override
     public void periodic() {
 
+        boolean didInitialReset = false;
+
         // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
         //LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
@@ -65,6 +67,12 @@ public class PoseEst extends SubsystemBase {
 
         LimelightHelpers.SetIMUMode("limelight", 3);
 
+
+
+        if (didInitialReset == false && mt2.tagCount >= 2){  
+            drivetrain.resetPose(mt2.pose);
+            didInitialReset= true;
+            };
         //doRejectUpdate = false;
    
         // if our angular velocity is greater than 360 degrees per second, ignore vision updates
