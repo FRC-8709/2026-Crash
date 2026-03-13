@@ -33,8 +33,8 @@ public class Shooter extends SubsystemBase {
 
     public void updatePIDValues(){
         // PARKER UNCOMMENT THIS WHEN YOU UPDATE THEM VIA ELASTIC
-        config.Slot0.kP = 0.01; //shooterKP.get();
-        config.Slot0.kV = 8; //shooterKV.get();
+        config.Slot0.kP = 0.08; //shooterKP.get();
+        config.Slot0.kV = 12; //shooterKV.get();
         //.01 KP
         //8 KV
         config.Slot0.kI = 0.0;

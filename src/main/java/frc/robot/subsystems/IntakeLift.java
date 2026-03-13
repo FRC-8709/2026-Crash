@@ -47,8 +47,8 @@ public class IntakeLift extends SubsystemBase {
         motorConfig.Slot0.kP = 0.15;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
-        //motorConfig.Slot0.kV = 2;
-        //motorConfig.Slot0.kS = 0.20;
+        motorConfig.Slot0.kV = 12;
+        motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
 
@@ -118,10 +118,12 @@ public class IntakeLift extends SubsystemBase {
         liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.upPosition));
 
     }
+
     public void raiseLiftMiddle() {
         liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
 
     }
+
     public boolean isLowered() {
         return (liftMotor.getPosition().getValueAsDouble() < -40.0f);
     }

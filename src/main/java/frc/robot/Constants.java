@@ -1,17 +1,11 @@
 package frc.robot;
 
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.math.geometry.Translation3d;
-
-// ?????? what is this
-import frc.robot.command.IntakeCommands.startRollers;
-
-import com.ctre.phoenix6.controls.PositionVoltage;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 
     public class Constants {
 
@@ -27,7 +21,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = -75;
+            public static final double shooterSpeed = -72;
+            public static final double autonShooterSpeed = -72;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
@@ -70,10 +65,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
             // Speed constants
             private static final double rollerSpeed = -10;
 
-            // Position constants
-            // I also totally guessed at these, please update these when appropriate
-            //public static final Angle liftUpValue = Units.Degrees.of(90);
-            //public static final Angle liftDownValue = Units.Degrees.of(-90);
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all
