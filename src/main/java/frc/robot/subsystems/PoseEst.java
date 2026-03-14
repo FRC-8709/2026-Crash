@@ -41,7 +41,6 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
-    private boolean canSee = false;
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
 
@@ -69,8 +68,7 @@ public class PoseEst extends SubsystemBase {
         LimelightHelpers.SetIMUMode("limelight", 3);
 
 
-        if (didInitialReset == false && mt2.tagCount == 1){  
-            canSee = true;
+        if (didInitialReset == false && mt2.tagCount >= 1){  
             drivetrain.resetPose(mt2.pose);
             didInitialReset= true;
             };
@@ -108,9 +106,21 @@ public class PoseEst extends SubsystemBase {
         // SmartDashboard.putNumber("LimelightTX", tx);
         // SmartDashboard.putNumber("LimelightTY", ty);
 
-        SmartDashboard.putBoolean("limeLightView", canSee);
+        // Where does the LIMELIGHT think we are?
+        SmartDashboard.putNumber("MegaTag2 Pose X", mt2.pose.getMeasureX().in(Inches));
+        SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureX().in(Inches));
+        SmartDashboard.putNumber("MegaTag2 Pose Angle", mt2.pose.getRotation().getDegrees());
+
+        // Did the limelight ever try to tell the drivetrain where it thinks we are?
+        SmartDashboard.putBoolean("Did reset", didInitialReset);
+
+        // Where does the ROBOT think its facing?
         SmartDashboard.putNumber("Robot rotation", getRotation());
+        
+        // Based on math, which way should the robot face to point at the goal?
         SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle().in(Degree));
+
+        // Where does the ROBOT think it is (x and y coordinates this time)
         LimelightDistance();
     }
     
