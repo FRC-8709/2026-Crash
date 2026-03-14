@@ -106,6 +106,9 @@ public class PoseEst extends SubsystemBase {
         // SmartDashboard.putNumber("LimelightTX", tx);
         // SmartDashboard.putNumber("LimelightTY", ty);
 
+        // How many tags can the limelight see?
+        SmartDashboard.putNumber("Visible tag count", mt2.tagCount);
+
         // Where does the LIMELIGHT think we are?
         SmartDashboard.putNumber("MegaTag2 Pose X", mt2.pose.getMeasureX().in(Inches));
         SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureX().in(Inches));
