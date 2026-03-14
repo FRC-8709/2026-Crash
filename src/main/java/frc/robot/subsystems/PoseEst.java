@@ -60,6 +60,7 @@ public class PoseEst extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putString("perodicRun", "isRunning");
         // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
         //LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
@@ -68,8 +69,8 @@ public class PoseEst extends SubsystemBase {
         LimelightHelpers.SetIMUMode("limelight", 3);
 
 
-        if (didInitialReset == false && mt2.tagCount >= 2){  
-            Boolean canSee = true;
+        if (didInitialReset == false && mt2.tagCount == 1){  
+            canSee = true;
             drivetrain.resetPose(mt2.pose);
             didInitialReset= true;
             };
