@@ -21,7 +21,7 @@ import edu.wpi.first.units.measure.Distance;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = -95;
+            public static final double shooterSpeed = -100;
             public static final double autonShooterSpeed = -72;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
@@ -39,6 +39,7 @@ import edu.wpi.first.units.measure.Distance;
 
             //HOOD POSITIONS
             public static final double slightAngle = 5;
+            public static final double passAngle = 8;
 
             public static final PositionVoltage hoodPosition = new PositionVoltage(0);
 

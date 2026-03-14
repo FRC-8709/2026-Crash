@@ -154,6 +154,10 @@ public class Hood extends SubsystemBase {
         hoodMotor.setControl(Constants.HoodConstants.hoodPosition.withPosition(Constants.HoodConstants.slightAngle));
 
     }
+    public void passHood() {
+        hoodMotor.setControl(Constants.HoodConstants.hoodPosition.withPosition(Constants.HoodConstants.passAngle));
+
+    }
 
 
     public void goToPosition(double targetPos) {
