@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -34,11 +35,13 @@ import frc.robot.helpers.LimelightHelpers;
 
 public class PoseEst extends SubsystemBase {
 
+
+    
     private CommandSwerveDrivetrain drivetrain;
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
-
+    private boolean canSee = false;
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
 
@@ -64,10 +67,14 @@ public class PoseEst extends SubsystemBase {
 
         LimelightHelpers.SetIMUMode("limelight", 3);
 
+
         if (didInitialReset == false && mt2.tagCount >= 2){  
+            Boolean canSee = true;
             drivetrain.resetPose(mt2.pose);
             didInitialReset= true;
             };
+    
+        
         //doRejectUpdate = false;
    
         // if our angular velocity is greater than 360 degrees per second, ignore vision updates
@@ -93,6 +100,14 @@ public class PoseEst extends SubsystemBase {
         //}
 
         // setting robot rotation in elastic
+        // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        // double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+
+
+        // SmartDashboard.putNumber("LimelightTX", tx);
+        // SmartDashboard.putNumber("LimelightTY", ty);
+
+        SmartDashboard.putBoolean("limeLightView", canSee);
         SmartDashboard.putNumber("Robot rotation", getRotation());
         SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle().in(Degree));
         LimelightDistance();

@@ -35,10 +35,12 @@ import edu.wpi.first.units.measure.Distance;
             // Hood CAN ids
             public static final int hoodMotorPort = 19;
             
-            public static final double upPosition = 4.737;
-            public static final double middlePosition = -20.0;
-            public static final double downPosition = -48.5;
+    
 
+            //HOOD POSITIONS
+            public static final double slightAngle = 5;
+
+            public static final PositionVoltage hoodPosition = new PositionVoltage(0);
 
         //-.16 -0.177001953125 for a hood position close up speed 75
             public static final VelocityVoltage hoodVelocity = new VelocityVoltage(0);

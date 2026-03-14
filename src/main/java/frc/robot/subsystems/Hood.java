@@ -61,7 +61,7 @@ public class Hood extends SubsystemBase {
         TalonFXConfiguration motorConfig = new TalonFXConfiguration();
         CANcoderConfiguration CANcoderConfig = new CANcoderConfiguration();
 
-        motorConfig.Slot0.kP = 0.08;
+        motorConfig.Slot0.kP = 0.15;
         motorConfig.Slot0.kI = 0.0;
         motorConfig.Slot0.kD = 0.0;
         motorConfig.Slot0.kV = 12;
@@ -83,6 +83,9 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
+
+
+        SmartDashboard.putNumber("Hood Value", hoodMotor.getPosition().getValueAsDouble());
         // This method will be called once per scheduler run
         // Update speed in Network table
         //setMotorSpeedRPS(5);
@@ -146,6 +149,12 @@ public class Hood extends SubsystemBase {
     public void goToPositionElastic() {
         goToPosition(SmartDashboard.getNumber("Hood go to pos", 0.1));
     }
+
+    public void raiseHood() {
+        hoodMotor.setControl(Constants.HoodConstants.hoodPosition.withPosition(Constants.HoodConstants.slightAngle));
+
+    }
+
 
     public void goToPosition(double targetPos) {
         currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
