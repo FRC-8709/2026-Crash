@@ -32,12 +32,12 @@ import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
 import frc.robot.helpers.LimelightHelpers;
 
-
 public class PoseEst extends SubsystemBase {
 
     private CommandSwerveDrivetrain drivetrain;
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
+    private boolean didInitialReset = false;
 
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
@@ -57,17 +57,12 @@ public class PoseEst extends SubsystemBase {
 
     @Override
     public void periodic() {
-
-        boolean didInitialReset = false;
-
         // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
         //LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
         LimelightHelpers.SetIMUMode("limelight", 3);
-
-
 
         if (didInitialReset == false && mt2.tagCount >= 2){  
             drivetrain.resetPose(mt2.pose);
@@ -90,7 +85,8 @@ public class PoseEst extends SubsystemBase {
         */
         //if(!doRejectUpdate)
         //{
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
+            //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
+            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,999));
             drivetrain.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds);
