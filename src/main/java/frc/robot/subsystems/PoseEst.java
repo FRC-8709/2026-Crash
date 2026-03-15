@@ -41,6 +41,8 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
+    private int[] validIDs = {25,26};
+
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
 
@@ -55,6 +57,7 @@ public class PoseEst extends SubsystemBase {
         distancePub.setDefault(0.0);
         posXPub.setDefault(0.0);
         posYPub.setDefault(0.0);
+        LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validIDs);
     }
 
     @Override
@@ -65,38 +68,29 @@ public class PoseEst extends SubsystemBase {
         //LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-        LimelightHelpers.SetIMUMode("limelight", 3);
-
-
         if (didInitialReset == false && mt2.tagCount >= 1){  
             drivetrain.resetPose(mt2.pose);
             didInitialReset= true;
-            };
+        };
     
-        
-        //doRejectUpdate = false;
+        doRejectUpdate = false;
    
         // if our angular velocity is greater than 360 degrees per second, ignore vision updates
-        /*
-        if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360)
-        {
+        if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360){
             doRejectUpdate = true;
         }
-         */
-        /*
-        if(mt2.tagCount == 0)
-        {
+        
+        if(mt2.tagCount == 0){
             doRejectUpdate = true;
         }
-        */
-        //if(!doRejectUpdate)
-        //{
+        
+        if(!doRejectUpdate){
             //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
             drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,999));
             drivetrain.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds);
-        //}
+        }
 
         // setting robot rotation in elastic
         // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);

@@ -30,6 +30,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.RawTopic;
 import edu.wpi.first.util.PixelFormat;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,6 +61,7 @@ import frc.robot.subsystems.PoseEst;
 import frc.robot.subsystems.Shooter;
 
 public class RobotContainer {
+
 
     private final SendableChooser<String> autos = new SendableChooser<>();
 
@@ -231,14 +233,18 @@ public class RobotContainer {
 
         // SHOOTER CONTROLS
         // Turn shooter on/off
-            joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
+           // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
         //joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
         //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
-            joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
+        
+   
+        //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35.0))));
+        joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
         // joystickLeft2Button6.onTrue(Commands.sequence(
-        // s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)), new WaitCommand(2), 
+        //s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)), new WaitCommand(2), 
         //  s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35))
         // ));
         //  joystickLeft2Button6.onTrue(Commands.sequence(
@@ -259,7 +265,7 @@ public class RobotContainer {
         // INDEXER CONTROLS
         // Turn indexer on/off
         joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
         
         
 
@@ -288,6 +294,7 @@ public class RobotContainer {
         // Simple drive forward auton
         // final var idle = new SwerveRequest.Idle();
         return Commands.sequence(
+            
             s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
             new WaitCommand(1),
             s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)),

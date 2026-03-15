@@ -73,12 +73,13 @@ import edu.wpi.first.units.measure.Distance;
 
             // Speed constants
             private static final double rollerSpeed = -10;
-
+            private static final double reverseRollerSpeed=10;
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all
             public static final VelocityVoltage rollerVelocity = new VelocityVoltage(rollerSpeed);
             public static final VelocityVoltage liftVelocity = new VelocityVoltage(0);
+            public static final VelocityVoltage rollerReverseVelocity = new VelocityVoltage(reverseRollerSpeed);
 
             // Object for position control
             // I am making two objects, one for the up position and one for the down position
