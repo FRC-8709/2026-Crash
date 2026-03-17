@@ -61,6 +61,12 @@ import edu.wpi.first.units.measure.Distance;
             public static final int IntakeLiftEncoderPort = 24;
         }
 
+        public class LedConstants {
+            //led port
+            public static final int ledPort = 0;
+            public static final int ledLength = 81;
+        }
+
         public class IntakeConstants {
           //Position values for intake 
             public static final double upPosition = 4.737;

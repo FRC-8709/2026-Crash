@@ -22,8 +22,8 @@ import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
 // wpilib imports
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+// import com.pathplanner.lib.auto.NamedCommands;
+// import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -54,9 +54,12 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.HubTracker;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.IntakeRoller;
+import frc.robot.subsystems.LedControl;
+import frc.robot.subsystems.MatchTimer;
 import frc.robot.subsystems.PoseEst;
 import frc.robot.subsystems.Shooter;
 
@@ -148,7 +151,11 @@ public class RobotContainer {
 
     private final PoseEst s_PoseEst = new PoseEst(drivetrain, gyro, inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
 
+    private final MatchTimer s_MatchTimer = new MatchTimer();
 
+    private final HubTracker s_HubTracker = new HubTracker();
+
+    private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
 
     public RobotContainer() {
         // Set up which buttons do what
@@ -158,8 +165,8 @@ public class RobotContainer {
 
         SmartDashboard.putData("Auto Selection", autos);
 
-        NamedCommands.registerCommand("Shoot", Commands.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
-        NamedCommands.registerCommand("Indexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)));
+        // NamedCommands.registerCommand("Shoot", Commands.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
+        // NamedCommands.registerCommand("Indexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)));
 
     }
 
@@ -294,15 +301,15 @@ public class RobotContainer {
         // Simple drive forward auton
         // final var idle = new SwerveRequest.Idle();
         return Commands.sequence(
-            
+            s_Hood.runOnce(()-> s_Hood.raiseHood()),
+            new WaitCommand(1),
             s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
             new WaitCommand(1),
             s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)),
             new WaitCommand(5),
             s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
             s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
-            new WaitCommand(1),
-            s_Hood.runOnce(()-> s_Hood.raiseHood())
+            s_Indexer.runOnce(() -> s_Indexer.stopRoller())
             // // Reset our field centric heading to match the robot
             // // facing away from our alliance station wall (0 deg).
             // drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
