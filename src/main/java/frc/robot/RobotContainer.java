@@ -62,6 +62,7 @@ import frc.robot.subsystems.LedControl;
 import frc.robot.subsystems.MatchTimer;
 import frc.robot.subsystems.PoseEst;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ZoneTracking;
 
 public class RobotContainer {
 
@@ -156,6 +157,8 @@ public class RobotContainer {
     private final HubTracker s_HubTracker = new HubTracker();
 
     private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
+
+    private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, gyro);
 
     public RobotContainer() {
         // Set up which buttons do what

@@ -41,7 +41,7 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
-    private int[] validIDs = {25,26};
+    private int[] validIDs = {18,19,20,21,24,25,26,27};
 
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
