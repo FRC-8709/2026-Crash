@@ -78,8 +78,8 @@ import edu.wpi.first.units.measure.Distance;
             public static final int liftMotorPort = 21;
 
             // Speed constants
-            private static final double rollerSpeed = -25;
-            private static final double reverseRollerSpeed=25;
+            private static final double rollerSpeed = -10;
+            private static final double reverseRollerSpeed=10;
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all

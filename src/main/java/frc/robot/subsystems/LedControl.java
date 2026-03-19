@@ -2,27 +2,28 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LedControl extends SubsystemBase {
     AddressableLED led;
     AddressableLEDBuffer ledBuffer;
 
+    //This is just becuase i wanted to see if i could get a color to display in elastic (yes i can)
+    private int currentR, currentG, currentB;
+    private String colorHex;
+
     public LedControl(int port, int length) {
         led = new AddressableLED(port);
         ledBuffer = new AddressableLEDBuffer(length);
         led.setLength(length);
         led.start();
-        WeWin();
+        setColor(255, 0, 0);
     }
 
     @Override
     public void periodic() {
-        // if(DriverStation.isEnabled()) {
-        //     setColor(0, 255, 0);
-        // } else if(DriverStation.isDisabled()) {
-        //     setColor(255, 0, 0);
-        // }
+        SmartDashboard.putString("LED Color", colorHex);
     }
 
     public void hubActive() {
@@ -48,6 +49,7 @@ public class LedControl extends SubsystemBase {
     }
 
     public void setColor(int r, int g, int b) {
+        colorHex = String.format("#%02X%02X%02X", r, g, b);
         for (int i = 0; i < ledBuffer.getLength(); i++) ledBuffer.setRGB(i, r, g, b);
         led.setData(ledBuffer);
     }

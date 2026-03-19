@@ -32,6 +32,7 @@ import edu.wpi.first.networktables.RawTopic;
 import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,7 +51,7 @@ import frc.robot.command.IntakeCommands.stopRollers;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-
+import frc.robot.subsystems.FieldMap;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
@@ -158,7 +159,9 @@ public class RobotContainer {
 
     private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
 
-    private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, gyro);
+    private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, s_LedControl);
+
+    private final FieldMap s_FieldMap = new FieldMap(drivetrain);
 
     public RobotContainer() {
         // Set up which buttons do what
