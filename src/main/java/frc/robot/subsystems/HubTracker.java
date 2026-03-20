@@ -23,15 +23,15 @@ public class HubTracker extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(gameData.isEmpty()) {
-            gameData = DriverStation.getGameSpecificMessage();
-        } else {
-            if(gameData.equals("R")) {
-                redInactiveFirst = true;
-            } else if(gameData.equals("B")) {
-                redInactiveFirst = false;
-            }
-        }
+        // if(gameData.isEmpty()) {
+        //     gameData = DriverStation.getGameSpecificMessage();
+        // } else {
+        //     if(gameData.equals("R")) {
+        //         redInactiveFirst = true;
+        //     } else if(gameData.equals("B")) {
+        //         redInactiveFirst = false;
+        //     }
+        // }
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Red);
         SmartDashboard.putString("Alliance", alliance.toString());
         SmartDashboard.putBoolean("Is Hub Active", isHubActive());

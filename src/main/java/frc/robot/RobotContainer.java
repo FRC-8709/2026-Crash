@@ -252,7 +252,7 @@ public class RobotContainer {
         
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35.0))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(50.0))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
@@ -265,20 +265,19 @@ public class RobotContainer {
         //  s_Indexer.runOnce(()-> s_Indexer.stopRoller())
         // ));
         // HOOD CONTROLS
-        /**/
-        joystickLeft1Button6.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(6))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
-        joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
-        joystickLeft1Button4.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-6))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
-        // go to position
-        // joystickRight2Button8.onTrue(Commands.runOnce(() -> s_Hood.goToPositionElastic()));
-        joystickLeft2button2.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
-        joystickRight1Button12.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
-        joystickRight1Button11.onTrue(Commands.runOnce(()-> s_Hood.passHood()));
+        
+        // joystickLeft1Button6.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(6))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
+        // joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
+        // joystickLeft1Button4.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-6))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        // // go to position
+        // joystickLeft2button2.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
+        // joystickRight1Button12.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
+        // joystickRight1Button11.onTrue(Commands.runOnce(()-> s_Hood.passHood()));
 
         // INDEXER CONTROLS
         // Turn indexer on/off
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
         
         
 
@@ -311,7 +310,7 @@ public class RobotContainer {
             new WaitCommand(1),
             s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
             new WaitCommand(1),
-            s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)),
+            s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
             new WaitCommand(5),
             s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
             s_Indexer.runOnce(()-> s_Indexer.stopRoller()),

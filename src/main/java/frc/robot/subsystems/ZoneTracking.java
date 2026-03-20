@@ -25,9 +25,9 @@ public class ZoneTracking extends SubsystemBase {
 
     public enum FieldZones {
         BlueAllianceZone,
-        BlueScoringZone, // might change later
+        BlueScoringZone,
         RedAllianceZone,
-        RedScoringZone, // also might change later
+        RedScoringZone,
         NeutralZone,
         NoZone;
     }
