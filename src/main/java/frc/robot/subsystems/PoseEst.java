@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // custom imports
 import frc.robot.Constants;
@@ -36,7 +37,7 @@ import frc.robot.helpers.LimelightHelpers;
 public class PoseEst extends SubsystemBase {
 
 
-    
+    private final Field2d fieldMap = new Field2d();
     private CommandSwerveDrivetrain drivetrain;
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
@@ -115,7 +116,13 @@ public class PoseEst extends SubsystemBase {
         SmartDashboard.putNumber("Robot rotation", getRotation());
         
         // Based on math, which way should the robot face to point at the goal?
-        SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle().in(Degree));
+        SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle(Constants.FieldConstants.blueHubPosition).in(Degree));
+
+        SmartDashboard.putNumber("Distance from goal", Units.Meters.of(getDistanceFromGoal(Constants.FieldConstants.blueHubPosition).toTranslation2d().getNorm()).in(Inches));
+
+        // Field map
+        fieldMap.setRobotPose(drivetrain.getState().Pose);
+        SmartDashboard.putData("Field Map", fieldMap);
 
         // Where does the ROBOT think it is (x and y coordinates this time)
         LimelightDistance();
@@ -167,7 +174,7 @@ public class PoseEst extends SubsystemBase {
         distancePub.set(distance);
     }
 
-    private Translation3d getDistanceFromGoal() {
+    public Translation3d getDistanceFromGoal(Translation3d targetGoal) {
         Translation2d robotPosition2d;
         Translation3d robotPosition3d, distanceFromGoal;
 
@@ -178,14 +185,14 @@ public class PoseEst extends SubsystemBase {
 
         // Find the difference between the robot and the goal
         // Might have this backwards, check later
-        return Constants.FieldConstants.goalPosition.minus(robotPosition3d);
+        return targetGoal.minus(robotPosition3d);
     }
 
     /* Function to calculate the launch angle of the ball based on the distance and current flywheel velocity
      * Ideally we actually give a number here but I'll hardcode it just because
      * https://en.wikipedia.org/wiki/Projectile_motion#Angle_%CE%B8_required_to_hit_coordinate_(x,_y)
      */
-    public Angle calculateLaunchAngle() {
+    public Angle calculateLaunchAngle(Translation3d targetGoal) {
         // I'm going to break this up into a couple smaller pieces so the math doesn't look gross
         double x, y, z;
         double a, b, c;
@@ -196,7 +203,7 @@ public class PoseEst extends SubsystemBase {
         double g = 9.81;
 
         // Need to find distance between where we are now and the goal
-        Translation3d translationFromGoal = getDistanceFromGoal();
+        Translation3d translationFromGoal = getDistanceFromGoal(targetGoal);
         x = translationFromGoal.getMeasureX().in(Meter);
         y = translationFromGoal.getMeasureY().in(Meter);
         z = translationFromGoal.getMeasureZ().in(Meter);
@@ -228,7 +235,7 @@ public class PoseEst extends SubsystemBase {
     }
 
     // What angle does the robot need to face to look at the goal?
-    public Angle getGoalFacingAngle() {
+    public Angle getGoalFacingAngle(Translation3d targetGoal) {
         Angle goalFacingAngle;
 
         Translation2d goalTranslation2d, robotTranslation2d, diffTranslation2d;
@@ -237,7 +244,7 @@ public class PoseEst extends SubsystemBase {
         robotTranslation2d = getPose2d().getTranslation();
 
         // Where is the goal? (x,y)
-        goalTranslation2d = Constants.FieldConstants.goalPosition.toTranslation2d();
+        goalTranslation2d = targetGoal.toTranslation2d();
 
         // What is the difference between the two? (xgoal - xrobot, ygoal-yrobot)
         diffTranslation2d = goalTranslation2d.minus(robotTranslation2d);

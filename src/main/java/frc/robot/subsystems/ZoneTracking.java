@@ -17,17 +17,23 @@ public class ZoneTracking extends SubsystemBase {
     // they could go into constants because they dont change, might do that later
     // values are formatted in {point1X,point1Y,point2X,point2Y}
     // These values should be correct, just need to test how well they work...
-    private static final double[] BLUE_ALLIANCE_ZONE = {0,0,182.11,317.69};
-    private static final double[] BLUE_SCORING_ZONE = {0,0,0,0}; // tbd
-    private static final double[] NEUTRAL_ZONE = {182.11,0,469.11,317.69};
-    private static final double[] RED_ALLIANCE_ZONE = {469.11,0,651.22,317.69};
-    private static final double[] RED_SCORING_ZONE = {0,0,0,0}; // tbd
+    private static final double[] BLUE_ALLIANCE_ZONE = {0,0,158.06,316.64};
+    private static final double[] NEUTRAL_ZONE = {205.06,0,445.06,316.64};
+    private static final double[] RED_ALLIANCE_ZONE = {492.06,0,673.62,316.64};
+
+    /* 
+     * adding "transition zones" for when we're on the bump because
+     * i dont think we want to be doing anything when we're not fully
+     * in one of the 3 main zones
+     */
+    private static final double[] BLUE_TRANSITION_ZONE = {158.06,0,205.06,316.64};
+    private static final double[] RED_TRANSITION_ZONE = {445.06,0,492.06,316.64};
 
     public enum FieldZones {
         BlueAllianceZone,
-        BlueScoringZone,
+        BlueTransitionZone,
         RedAllianceZone,
-        RedScoringZone,
+        RedTransitionZone,
         NeutralZone,
         NoZone;
     }
@@ -46,28 +52,24 @@ public class ZoneTracking extends SubsystemBase {
     // check what zone the robot is in
     private FieldZones determinZone() {
         if(inZone(BLUE_ALLIANCE_ZONE)) {
-            leds.setColor(0, 0, 255);
-            // this is so alliance zone doesnt override the alliance scoring zone
-            // it would return only the first on if we just had it in a bunch of else ifs
-            // this is the first way i thought of doing it, same applies to red zone & scoring
-            if(inZone(BLUE_SCORING_ZONE)) {
-                return FieldZones.BlueScoringZone;
-            } else {
-                return FieldZones.BlueAllianceZone;
-            }
+            leds.setColor(37, 150, 250);
+            return FieldZones.BlueAllianceZone;
+        } else if(inZone(BLUE_TRANSITION_ZONE)) {
+            leds.setColor(255, 0, 255);
+            return FieldZones.BlueTransitionZone;
         } else if(inZone(RED_ALLIANCE_ZONE)) {
             leds.setColor(255, 0, 0);
-            if(inZone(RED_SCORING_ZONE)) {
-                return FieldZones.RedScoringZone;
-            } else {
-                return FieldZones.RedAllianceZone;
-            }
-        } else if(inZone(NEUTRAL_ZONE)) {
+            return FieldZones.RedAllianceZone;
+        } else if(inZone(RED_TRANSITION_ZONE)) {
+            leds.setColor(255, 0, 255);
+            return FieldZones.RedTransitionZone;
+        }  else if(inZone(NEUTRAL_ZONE)) {
             leds.setColor(212, 175, 55);
             return FieldZones.NeutralZone;
         } else {
             // in case we cant determin a zone for some reason
             // we SHOULD NEVER get this as a result, but just in case
+            leds.setColor(0, 0, 0);
             return FieldZones.NoZone;
         }
     }

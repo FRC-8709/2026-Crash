@@ -10,7 +10,6 @@ public class LedControl extends SubsystemBase {
     AddressableLEDBuffer ledBuffer;
 
     //This is just becuase i wanted to see if i could get a color to display in elastic (yes i can)
-    private int currentR, currentG, currentB;
     private String colorHex;
 
     public LedControl(int port, int length) {

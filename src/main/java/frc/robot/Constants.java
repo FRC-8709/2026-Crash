@@ -31,11 +31,41 @@ import edu.wpi.first.units.measure.Distance;
             public static final Distance shooterHeight = Units.Inches.of(28);
         }
 
+        public class ScoringConstants {
+            // ALL THESE VALUES ARE MADE UP AND NEED TO BE ADJUSTED/TESTED
+            
+            // max distance should be somewhat correct based on the 2d simulation i did and
+            // where i think we should be able to score from
+
+            // max distance robot can be from goal when scoring (inches)
+            public static final double maxDistance = 125;
+
+            // tolerance for how accuratly the robot needs to be aligned to score (degrees)
+            public static final double goalFacingTolerance = 5;
+
+            // tolerance for how accurate/close the hood needs to be to the set positionto score
+            // (i think this would be in degrees)
+            public static final double hoodAngleTolerance = 5;
+        }
+
         public class HoodConstants {
             // Hood CAN ids
             public static final int hoodMotorPort = 19;
-            
-    
+            public static final int leftHoodServoChannel = 1;
+            public static final int rightHoodServoChannel = 2;
+
+            // ACTUATORS
+            /* The speed set comes from the WCP website for max speed with no load
+             * got the 36:1 gearing option, the specs are listed below
+             * 
+             * - Peak Power Point:75N @10mm/s
+             * - Peak Efficiency Point: 38N @15mm/s
+             * - Max Speed (no load): 20mm/s
+             * - Max Force (lifted): 100N
+             * - Back Drive Force: 46N
+             */
+            public static final double actuatorLengthMM = 140;
+            public static final double actuatorSpeedMMS = 20;
 
             //HOOD POSITIONS
             public static final double slightAngle = 5;
@@ -100,6 +130,7 @@ import edu.wpi.first.units.measure.Distance;
             // Where is the goal on the field?
             // Make a blue goal and a red goal, right now this is just for testing
             // Also actually add the real position, I just made this up for testing
-            public static final Translation3d goalPosition = new Translation3d(Units.Inches.of(182.11), Units.Inches.of(158.84), Units.Inches.of(72));
+            public static final Translation3d blueHubPosition = new Translation3d(Units.Inches.of(181.56), Units.Inches.of(158.32), Units.Inches.of(72));
+            public static final Translation3d redHubPosition = new Translation3d(Units.Inches.of(468.56), Units.Inches.of(158.32), Units.Inches.of(72));
         }
 }

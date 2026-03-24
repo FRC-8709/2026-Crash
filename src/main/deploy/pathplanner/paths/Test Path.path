@@ -1,0 +1,186 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6024111111111115,
+        "y": 5.623344444444444
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.793909628746836,
+        "y": 5.81766589136433
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.008,
+        "y": 4.863277777777778
+      },
+      "prevControl": {
+        "x": 2.8044578954918147,
+        "y": 4.718120581289354
+      },
+      "nextControl": {
+        "x": 3.887228023651637,
+        "y": 5.490304187353873
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.635322222222222,
+        "y": 5.623344444444444
+      },
+      "prevControl": {
+        "x": 4.393783545367268,
+        "y": 5.558853611117854
+      },
+      "nextControl": {
+        "x": 4.9927980488789,
+        "y": 5.718790499939088
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.09698888888889,
+        "y": 5.8767
+      },
+      "prevControl": {
+        "x": 5.624158011228453,
+        "y": 5.449983372127291
+      },
+      "nextControl": {
+        "x": 6.3568977763087675,
+        "y": 6.111260493474384
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.110411111111111,
+        "y": 6.860888888888889
+      },
+      "prevControl": {
+        "x": 6.475232451036389,
+        "y": 6.845891688609053
+      },
+      "nextControl": {
+        "x": 7.886905659502965,
+        "y": 6.879222697926275
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.626866666666697,
+        "y": 4.863277777777778
+      },
+      "prevControl": {
+        "x": 7.81201111111114,
+        "y": 5.5551333333315025
+      },
+      "nextControl": {
+        "x": 7.445323817246791,
+        "y": 4.184880814157816
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.09698888888889,
+        "y": 5.145866666664835
+      },
+      "prevControl": {
+        "x": 6.329632909381672,
+        "y": 5.0543420266548695
+      },
+      "nextControl": {
+        "x": 5.522913984950137,
+        "y": 5.371713859343402
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.635322222222253,
+        "y": 5.642833333331502
+      },
+      "prevControl": {
+        "x": 5.028740678526085,
+        "y": 5.6359353560524115
+      },
+      "nextControl": {
+        "x": 4.0567276932989245,
+        "y": 5.652978083407074
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0080000000000298,
+        "y": 4.882766666664836
+      },
+      "prevControl": {
+        "x": 3.246219598644999,
+        "y": 5.028762595591982
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": -46.39718102729631
+    },
+    {
+      "waypointRelativePos": 5,
+      "rotationDegrees": -88.15238973400832
+    },
+    {
+      "waypointRelativePos": 7,
+      "rotationDegrees": -45.00000000000015
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -26.840509533213268
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
