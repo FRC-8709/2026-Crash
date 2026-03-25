@@ -21,7 +21,7 @@ import edu.wpi.first.units.measure.Distance;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = 50;
+            public static final double shooterSpeed = 10;
             public static final double autonShooterSpeed = 72;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
@@ -51,25 +51,17 @@ import edu.wpi.first.units.measure.Distance;
         public class HoodConstants {
             // Hood CAN ids
             public static final int hoodMotorPort = 19;
-            public static final int leftHoodServoChannel = 1;
-            public static final int rightHoodServoChannel = 2;
-
-            // ACTUATORS
-            /* The speed set comes from the WCP website for max speed with no load
-             * got the 36:1 gearing option, the specs are listed below
-             * 
-             * - Peak Power Point:75N @10mm/s
-             * - Peak Efficiency Point: 38N @15mm/s
-             * - Max Speed (no load): 20mm/s
-             * - Max Force (lifted): 100N
-             * - Back Drive Force: 46N
-             */
-            public static final double actuatorLengthMM = 140;
-            public static final double actuatorSpeedMMS = 20;
 
             //HOOD POSITIONS
             public static final double slightAngle = 5;
             public static final double passAngle = 8;
+
+            // Minimum and Maximum positions for hood
+            public static final double minPos = 0;
+            public static final double maxPos = 100;
+
+            // for hood position purley based on ditance, no math
+            public static final double posMult = 0.055;
 
             public static final PositionVoltage hoodPosition = new PositionVoltage(0);
 

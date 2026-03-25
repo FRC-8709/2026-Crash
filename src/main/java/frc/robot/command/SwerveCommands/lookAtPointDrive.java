@@ -38,7 +38,7 @@ public class lookAtPointDrive extends Command{
         this.controller = controller;
         addRequirements(drivetrain);
 
-        driveWhileFacing.HeadingController.setPID(20, 0, 0.1);
+        driveWhileFacing.HeadingController.setPID(10, 0, 0.1);
     }
 
     private Rotation2d getAngleToTarget() {

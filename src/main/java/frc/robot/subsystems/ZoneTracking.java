@@ -11,7 +11,7 @@ public class ZoneTracking extends SubsystemBase {
     private double robotY;
     private LedControl leds;
 
-    private FieldZones currentZone = FieldZones.RedAllianceZone;
+    private FieldZones currentZone = FieldZones.NoZone;
 
     // these are variables that are essentially just to make the zone checking easier to read
     // they could go into constants because they dont change, might do that later

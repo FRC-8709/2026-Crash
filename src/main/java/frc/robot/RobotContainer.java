@@ -15,6 +15,10 @@ import javax.print.attribute.standard.JobHoldUntil;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
@@ -74,125 +78,140 @@ import frc.robot.subsystems.ZoneTracking.FieldZones;
 public class RobotContainer {
 
 
-    private final SendableChooser<String> autos = new SendableChooser<>();
-
-    // Set up instance of the network table so we can connect to it
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("datatable");
-
-    // Speed/turning speed stuff for swerve
-    // this is still voltage (angry) but I'm not gonna fix it yet
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    // private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-    //         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-    //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-    // Ethan here - not actually sure how the telemetry stuff works so I am not touching this
-    private final Telemetry logger = new Telemetry(MaxSpeed);
-
-    // Define joysticks
-    // Please give these better names, like "mainDriverJoystick1" and "codriverJoystick1" or something
-    private final Joystick joystickLeft1 = new Joystick(0);
-    private final Joystick joystickLeft2 = new Joystick(1);
-    private final Joystick joystickRight1 = new Joystick(2);
-    private final Joystick joystickRight2 = new Joystick(3);
-    private final PS4Controller controller = new PS4Controller(4);
-    private final JoystickButton ps4Circle = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
-    private final JoystickButton ps4X = new JoystickButton(controller, PS4Controller.Button.kCross.value);
-
-    // Set up button controls
-    // I don't love this setup, it feels like there should be a better way but I am just gonna leave it
-
-    // Swerve Buttons
-    private final JoystickButton joystickLeft1Button5 = new JoystickButton(joystickLeft1, 4);
-    private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
-    private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
-
-    // Shooter Buttons
-    private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
-    private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
-
-    // Hood Control Buttons
-    private final JoystickButton joystickLeft1Button6 = new JoystickButton(joystickLeft1, 6);
-    private final JoystickButton joystickRight2Button10 = new JoystickButton(joystickRight2, 10);
-    private final JoystickButton joystickLeft1Button4 = new JoystickButton(joystickLeft1, 4);
-    private final JoystickButton joystickLeft2button2 = new JoystickButton(joystickLeft2, 2);
- 
-    // Indexer Control Buttons
-    private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
-    private final JoystickButton joystickLeft2Button3 = new JoystickButton(joystickLeft2, 3);
-
-    //Intake Controls
-    private final JoystickButton joystickright1Button6 = new JoystickButton(joystickRight1, 6);
-    private final JoystickButton joystickright1Button4 = new JoystickButton(joystickRight1, 4);
-
-    private final JoystickButton joystickright2Button3 = new JoystickButton(joystickRight2,3);
-    private final JoystickButton joystickRight1Button7 = new JoystickButton(joystickRight1, 7);
-    private final JoystickButton joystickRight1Button8 = new JoystickButton(joystickRight1, 8);
-    private final JoystickButton joystickRight1Button9 = new JoystickButton(joystickRight1, 9);
-    private final JoystickButton joystickRight1Button10 = new JoystickButton(joystickRight1, 10);
-    private final JoystickButton joystickRight1Button12 = new JoystickButton(joystickRight1, 12);
-    private final JoystickButton joystickRight1Button11 = new JoystickButton(joystickRight1, 11);
-
-    private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
-    private final JoystickButton joystickRight2Button1 = new JoystickButton(joystickRight2, 1);
-    private final JoystickButton joystickRight2Button2 = new JoystickButton(joystickRight2, 2);
-
-    // Hood test buttons
-    private final JoystickButton joystickLeft2Button7 = new JoystickButton(joystickLeft2, 7);
-    private final JoystickButton joystickLeft2Button9 = new JoystickButton(joystickLeft2, 9);
-    private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
-
+    private SendableChooser<Command> autos = new SendableChooser<>();
     
-    // Swerve instance declaration
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
-
-    // Subsystem instance declaration
-    private final Agitator s_Agitator = new Agitator(); // Not implemented yet
-
-    private final Hood s_Hood = new Hood(new Servo(Constants.HoodConstants.leftHoodServoChannel), new Servo(Constants.HoodConstants.rightHoodServoChannel), joystickRight1);
+        // Set up instance of the network table so we can connect to it
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        NetworkTable table = inst.getTable("datatable");
     
-    private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2"));
+        // Speed/turning speed stuff for swerve
+        // this is still voltage (angry) but I'm not gonna fix it yet
+        private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+        private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    
+        /* Setting up bindings for necessary control of the swerve drive platform */
+        // private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+        //         .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+        //         .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+        private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+        private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    
+        // Ethan here - not actually sure how the telemetry stuff works so I am not touching this
+        private final Telemetry logger = new Telemetry(MaxSpeed);
+    
+        // Define joysticks
+        // Please give these better names, like "mainDriverJoystick1" and "codriverJoystick1" or something
+        private final Joystick joystickLeft1 = new Joystick(0);
+        private final Joystick joystickLeft2 = new Joystick(1);
+        private final Joystick joystickRight1 = new Joystick(2);
+        private final Joystick joystickRight2 = new Joystick(3);
+        private final PS4Controller controller = new PS4Controller(4);
+        private final JoystickButton ps4Circle = new JoystickButton(controller, PS4Controller.Button.kCircle.value);
+        private final JoystickButton ps4X = new JoystickButton(controller, PS4Controller.Button.kCross.value);
+    
+        // Set up button controls
+        // I don't love this setup, it feels like there should be a better way but I am just gonna leave it
+    
+        // Swerve Buttons
+        private final JoystickButton joystickLeft1Button5 = new JoystickButton(joystickLeft1, 4);
+        private final JoystickButton joystickLeft1Button3 = new JoystickButton(joystickLeft1, 3);
+        private final JoystickButton joystickLeft1Button1 = new JoystickButton(joystickLeft1, 1);
+    
+        // Shooter Buttons
+        private final JoystickButton joystickLeft2Button6 = new JoystickButton(joystickLeft2, 6);
+        private final JoystickButton joystickLeft2Button4 = new JoystickButton(joystickLeft2, 4);
+    
+        // Hood Control Buttons
+        private final JoystickButton joystickLeft1Button6 = new JoystickButton(joystickLeft1, 6);
+        private final JoystickButton joystickRight2Button10 = new JoystickButton(joystickRight2, 10);
+        private final JoystickButton joystickLeft1Button4 = new JoystickButton(joystickLeft1, 4);
+        private final JoystickButton joystickLeft2Button2 = new JoystickButton(joystickLeft2, 2);
+    
+        private final JoystickButton joystickLeft2Button8 = new JoystickButton(joystickLeft2, 8);
+        private final JoystickButton joystickLeft2Button10 = new JoystickButton(joystickLeft2, 10);
+    
+     
+        // Indexer Control Buttons
+        private final JoystickButton joystickLeft2Button5 = new JoystickButton(joystickLeft2, 5);
+        private final JoystickButton joystickLeft2Button3 = new JoystickButton(joystickLeft2, 3);
+    
+        //Intake Controls
+        private final JoystickButton joystickright1Button6 = new JoystickButton(joystickRight1, 6);
+        private final JoystickButton joystickright1Button4 = new JoystickButton(joystickRight1, 4);
+    
+        private final JoystickButton joystickright2Button3 = new JoystickButton(joystickRight2,3);
+        private final JoystickButton joystickRight1Button7 = new JoystickButton(joystickRight1, 7);
+        private final JoystickButton joystickRight1Button8 = new JoystickButton(joystickRight1, 8);
+        private final JoystickButton joystickRight1Button9 = new JoystickButton(joystickRight1, 9);
+        private final JoystickButton joystickRight1Button10 = new JoystickButton(joystickRight1, 10);
+        private final JoystickButton joystickRight1Button12 = new JoystickButton(joystickRight1, 12);
+        private final JoystickButton joystickRight1Button11 = new JoystickButton(joystickRight1, 11);
+    
+        private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
+        private final JoystickButton joystickRight2Button1 = new JoystickButton(joystickRight2, 1);
+        private final JoystickButton joystickRight2Button2 = new JoystickButton(joystickRight2, 2);
+    
+        // Hood test buttons
+        private final JoystickButton joystickLeft2Button7 = new JoystickButton(joystickLeft2, 7);
+        private final JoystickButton joystickLeft2Button9 = new JoystickButton(joystickLeft2, 9);
+        private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
+    
         
-    private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("LiftPosition"));
-    private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"), inst.getDoubleTopic("RollerKP"), inst.getDoubleTopic("RollerKV"));
+        // Swerve instance declaration
+        public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+        public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
+    
+        // Subsystem instance declaration
+        private final Agitator s_Agitator = new Agitator(); // Not implemented yet
+    
+        private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
+    
+        private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, s_LedControl);
+    
+        private final PoseEst s_PoseEst = new PoseEst(drivetrain, gyro, inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
+    
+        private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), s_ZoneTracking, s_PoseEst);
+        
+        private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2"));
+            
+        private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("LiftPosition"));
+        private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"), inst.getDoubleTopic("RollerKP"), inst.getDoubleTopic("RollerKV"));
+    
+        private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"), s_PoseEst, s_ZoneTracking, s_Hood);
+    
+        private final MatchTimer s_MatchTimer = new MatchTimer();
+    
+        private final HubTracker s_HubTracker = new HubTracker();
+    
+        private final ScoringControl s_ScoringControl = new ScoringControl(s_ZoneTracking, s_PoseEst);
+    
+        // Field zone triggers
+        Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
+        Trigger inBlueAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.BlueAllianceZone);
+        Trigger inRedAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.RedAllianceZone);
+    
+    
+        public RobotContainer() {
+            // Set up which buttons do what
+            configureBindings();
 
-    private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"));
+            // Register Auton Stuff
+            // list for auton selection (automatically adds options based on paths made)
+            autos = AutoBuilder.buildAutoChooser();
+            SmartDashboard.putData("Auto Selection", autos);
 
-    private final PoseEst s_PoseEst = new PoseEst(drivetrain, gyro, inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
+            // Intake Commands
+            NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
+            NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
+            NamedCommands.registerCommand("raiseIntakeMiddle", new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
+            NamedCommands.registerCommand("stopIntake", new stopRollers(s_IntakeRoller));
+            NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
 
-    private final MatchTimer s_MatchTimer = new MatchTimer();
-
-    private final HubTracker s_HubTracker = new HubTracker();
-
-    private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
-
-    private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, s_LedControl);
-
-    private final ScoringControl s_ScoringControl = new ScoringControl(s_ZoneTracking, s_PoseEst);
-
-    // Field zone triggers
-    Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
-    Trigger inBlueAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.BlueAllianceZone);
-    Trigger inRedAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.RedAllianceZone);
-
-
-    public RobotContainer() {
-        // Set up which buttons do what
-        configureBindings();
-
-        autos.addOption("shoot", "New Auto");
-
-        SmartDashboard.putData("Auto Selection", autos);
-
-        // NamedCommands.registerCommand("Shoot", Commands.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
-        // NamedCommands.registerCommand("Indexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(-35)));
+            //Shooter Commands
+            NamedCommands.registerCommand("startShooter", Commands.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
+            NamedCommands.registerCommand("startShooter", Commands.runOnce(()-> s_Shooter.stopMotors()));
+            NamedCommands.registerCommand("startIndexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(31)));
+            NamedCommands.registerCommand("stopIndexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(0)));
     }
 
     private void configureBindings() {
@@ -273,7 +292,7 @@ public class RobotContainer {
         
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35.0))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
@@ -286,18 +305,17 @@ public class RobotContainer {
         //  s_Indexer.runOnce(()-> s_Indexer.stopRoller())
         // ));
         // HOOD CONTROLS
-        // joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.setSpeed(1))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
-        // joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.setSpeed(-1))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
-            joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(140)));
-            joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(70)));
-            joystickLeft2Button11.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(0)));
+
+        joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(100)));
+        joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(50)));
+        joystickLeft2Button11.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(0)));
+
+        joystickLeft2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(.25))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickLeft2Button10.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(-.25))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
         // joystickLeft1Button6.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(6))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
         // joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
         // joystickLeft1Button4.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-6))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
         // // go to position
-        // joystickLeft2button2.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
-        // joystickRight1Button12.onTrue(Commands.runOnce(()-> s_Hood.raiseHood()));
-        // joystickRight1Button11.onTrue(Commands.runOnce(()-> s_Hood.passHood()));
 
         // INDEXER CONTROLS
         // Turn indexer on/off
@@ -321,13 +339,8 @@ public class RobotContainer {
 
         joystickRight1Button7.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
         joystickRight1Button8.onTrue(new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
-        joystickRight1Button9.onTrue(new raiseLiftMiddle(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
+        joystickRight1Button9.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
         joystickRight1Button10.onTrue(Commands.runOnce(() -> s_IntakeLift.stopLift()));
-
-        //joystickRight1Button8.onTrue(Commands.runOnce(() -> s_IntakeLift.raiseLift()));
-        //joystickRight1Button12.onTrue(Commands.runOnce(() -> s_IntakeLift.lowerLift()).andThen());
-
-
 
         // ZONE TESTING
         // this is assuming my code for the hood servos is correct
@@ -340,31 +353,21 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        return autos.getSelected();
+        
         // Simple drive forward auton
         // final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            // s_Hood.runOnce(()-> s_Hood.raiseHood()),
-            new WaitCommand(1),
-            s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
-            new WaitCommand(1),
-            s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
-            new WaitCommand(5),
-            s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
-            s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
-            s_Indexer.runOnce(() -> s_Indexer.stopRoller())
-            // // Reset our field centric heading to match the robot
-            // // facing away from our alliance station wall (0 deg).
-            // drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // // Then slowly drive forward (away from us) for 5 seconds.
-            // drivetrain.applyRequest(() ->
-            //     drive.withVelocityX(0.5)
-            //         .withVelocityY(0)
-            //         .withRotationalRate(0)
-            // )
-            // .withTimeout(5.0),
-            // // Finally idle for the rest of auton
-            // drivetrain.applyRequest(() -> idle)
-        );
+        // return Commands.sequence(
+        //     // s_Hood.runOnce(()-> s_Hood.raiseHood()),
+        //     new WaitCommand(1),
+        //     s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
+        //     new WaitCommand(1),
+        //     s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
+        //     new WaitCommand(5),
+        //     s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
+        //     s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
+        //     s_Indexer.runOnce(() -> s_Indexer.stopRoller())
+        // );
     }
 
   

@@ -30,13 +30,13 @@ public class ScoringControl extends SubsystemBase {
 
     public boolean canScore() {
         if(alliance.equals(Alliance.Blue)) {
-            if(zones.currentZone() == FieldZones.BlueAllianceZone && Units.Meters.of(poseEst.getDistanceFromGoal(Constants.FieldConstants.blueHubPosition).toTranslation2d().getNorm()).in(Inches) <= Constants.ScoringConstants.maxDistance) {
+            if(zones.currentZone() == FieldZones.BlueAllianceZone && Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches) <= Constants.ScoringConstants.maxDistance) {
                 return true;
             } else {
                 return false;
             }
         } else if(alliance.equals(Alliance.Red)) {
-            if(zones.currentZone() == FieldZones.RedAllianceZone && Units.Meters.of(poseEst.getDistanceFromGoal(Constants.FieldConstants.redHubPosition).toTranslation2d().getNorm()).in(Inches) <= Constants.ScoringConstants.maxDistance) {
+            if(zones.currentZone() == FieldZones.RedAllianceZone && Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches) <= Constants.ScoringConstants.maxDistance) {
                 return true;
             } else {
                 return false;
