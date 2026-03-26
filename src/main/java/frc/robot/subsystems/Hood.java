@@ -25,9 +25,13 @@ public class Hood extends SubsystemBase {
     private final TalonFX hoodMotor;
     private final ZoneTracking zones;
     private final PoseEst poseEst;
+    private final Shooter shooter;
+    
+    double distanceFromGoal;
+
     private final boolean manualHoodControl = false;
 
-    public Hood(TalonFX hoodMotor, ZoneTracking zones, PoseEst poseEst) {
+    public Hood(TalonFX hoodMotor, ZoneTracking zones, PoseEst poseEst, Shooter shooter) {
         TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
         motorConfig.Slot0.kP = 0.15;
@@ -42,14 +46,17 @@ public class Hood extends SubsystemBase {
         this.hoodMotor = hoodMotor;
         this.zones = zones;
         this.poseEst = poseEst;
+        this.shooter = shooter;
    }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Hood Speed", hoodMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Hood Position", hoodMotor.getPosition().getValueAsDouble());
+        
+        distanceFromGoal = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
 
-        autoPositionHood(Constants.HoodConstants.posMult);
+        calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
     }
 
     /**
@@ -74,17 +81,58 @@ public class Hood extends SubsystemBase {
      * Set position multiplier for hood
      * @param multiplier hood position
      */
-    public void autoPositionHood(double multiplier) {
-        if(!manualHoodControl) {
-            if(zones.currentZone() == FieldZones.NeutralZone) {
-                goToPosition(10);
-            } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
-                goToPosition(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches) * multiplier);
-            } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
-                goToPosition(0);
-            }
-        }
+    // public void autoPositionHood(double multiplier) {
+        // if(!manualHoodControl) {
+        //     if(zones.currentZone() == FieldZones.NeutralZone) {
+        //         goToPosition(10);
+        //     } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+        //         goToPosition(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches) * multiplier);
+        //     } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
+        //         goToPosition(0);
+        //     }
+        // }
+
+        // if(!manualHoodControl) {
+        //     if(zones.currentZone() == FieldZones.NeutralZone) {
+        //         goToPosition(10);
+        //     } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+        //         goToPosition(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
+        //     } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
+        //         goToPosition(0);
+        //     }
+        // }
+        // SmartDashboard.putNumber("Estimated Hood Position", calculateHoodAngle(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
+    // }
+
+    public double calculateHoodAngle(double robotDistance, double shooterSpeed) {
+        final double distanceOffset = 8;
+        final double minPos = 0;
+        final double maxPos = 25;
+        double clampedPosition = MathUtil.clamp(-0.495258 + (0.108459 * (robotDistance-distanceOffset)) + (-0.151605 * shooterSpeed), minPos, maxPos);
+        SmartDashboard.putNumber("Calculated Hood Position", clampedPosition);
+        return clampedPosition;
     }
+
+    // public double autoSetPosition() {
+    //     double distance = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
+    //     if(distance <= 56) {
+    //         return 0;
+    //     } else if(distance > 56 && distance <= 68) {
+    //         return 0;
+    //     } else if(distance > 68 && distance <= 80) {
+    //         return 2;
+    //     } else if(distance > 80 && distance <= 92) {
+    //         return 3.5;
+    //     } else if(distance > 92 && distance <= 104) {
+    //         return 4;
+    //     } else if(distance > 104 && distance <= 116) {
+    //         return 4;
+    //     } else if(distance < 116) {
+    //         return 4;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
 
     /**
      * Set position of hood

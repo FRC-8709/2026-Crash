@@ -60,6 +60,7 @@ import frc.robot.command.SwerveCommands.lookAtPointDrive;
 import frc.robot.command.SwerveCommands.regularDrive;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DriveControl;
 // our subsystem imports
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Hood;
@@ -169,21 +170,23 @@ public class RobotContainer {
         private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, s_LedControl);
     
         private final PoseEst s_PoseEst = new PoseEst(drivetrain, gyro, inst.getDoubleTopic("RobotDistance"), inst.getDoubleTopic("RobotX"), inst.getDoubleTopic("RobotY"));
+
+        private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"), s_PoseEst, s_ZoneTracking);
     
-        private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), s_ZoneTracking, s_PoseEst);
+        private final Hood s_Hood = new Hood(new TalonFX(Constants.HoodConstants.hoodMotorPort), s_ZoneTracking, s_PoseEst, s_Shooter);
         
         private final Indexer s_Indexer = new Indexer(new TalonFX(Constants.IndexerConstants.indexerMotorPort), inst.getDoubleTopic("make2"));
             
         private final IntakeLift s_IntakeLift = new IntakeLift(new TalonFX(Constants.IntakeConstants.liftMotorPort), new CANcoder(Constants.SensorConsants.IntakeLiftEncoderPort), inst.getDoubleTopic("LiftPosition"));
         private final IntakeRoller s_IntakeRoller = new IntakeRoller(new TalonFX(Constants.IntakeConstants.rollerMotorPort), inst.getDoubleTopic("RollerSpeed"), inst.getDoubleTopic("RollerKP"), inst.getDoubleTopic("RollerKV"));
     
-        private final Shooter s_Shooter = new Shooter(new TalonFX(Constants.ShooterConstants.leaderShooterMotorPort), new TalonFX(Constants.ShooterConstants.followerShooterMotor1Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor2Port),new TalonFX(Constants.ShooterConstants.followerShooterMotor3Port), inst.getDoubleTopic("ShooterSpeed"), inst.getDoubleTopic("ShooterKP"), inst.getDoubleTopic("ShooterKV"), s_PoseEst, s_ZoneTracking, s_Hood);
-    
         private final MatchTimer s_MatchTimer = new MatchTimer();
     
         private final HubTracker s_HubTracker = new HubTracker();
     
         private final ScoringControl s_ScoringControl = new ScoringControl(s_ZoneTracking, s_PoseEst);
+
+        private final DriveControl s_DriveControl = new DriveControl(drivetrain, joystickLeft1, joystickLeft2, controller);
     
         // Field zone triggers
         Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
@@ -293,7 +296,9 @@ public class RobotContainer {
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
+        // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+        // joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
         // joystickLeft2Button6.onTrue(Commands.sequence(
@@ -307,11 +312,11 @@ public class RobotContainer {
         // HOOD CONTROLS
 
         joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(100)));
-        joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(50)));
+        joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(4.5)));
         joystickLeft2Button11.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(0)));
 
-        joystickLeft2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(.25))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
-        joystickLeft2Button10.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(-.25))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickLeft2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(.5))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
+        joystickLeft2Button10.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(-.5))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
         // joystickLeft1Button6.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(6))).onFalse(Commands.runOnce(()-> s_Hood.stopHood()));
         // joystickRight2Button10.onTrue(Commands.runOnce(() -> s_Hood.stopHood()));
         // joystickLeft1Button4.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPM(-6))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
@@ -342,14 +347,10 @@ public class RobotContainer {
         joystickRight1Button9.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
         joystickRight1Button10.onTrue(Commands.runOnce(() -> s_IntakeLift.stopLift()));
 
-        // ZONE TESTING
-        // this is assuming my code for the hood servos is correct
-        // inBlueAllianceZone.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(70)));
-        // inBlueScoringZone.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(40)));
-        // inNeutralZone.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(100)));
-
-        ps4Circle.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
-        joystickLeft2Button3.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
+        // ps4Circle.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
+        ps4Circle.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
+        // joystickLeft2Button3.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
     }
 
     public Command getAutonomousCommand() {

@@ -34,7 +34,7 @@ public class Shooter extends SubsystemBase {
     private final boolean usingAutomaticSpeed = false;
     private final PoseEst poseEst;
     private final ZoneTracking zones;
-    private final Hood hood;
+    boolean isScoring = false;
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
         leaderShooterMotor.getConfigurator().apply(config);
     }
 
-    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, TalonFX followerShooterMotor2, TalonFX followerShooterMotor3 , DoubleTopic speedTopic, DoubleTopic shooterKPTopic, DoubleTopic shooterKVTopic, PoseEst poseEst, ZoneTracking zones, Hood hood) {
+    public Shooter(TalonFX leaderShooterMotor, TalonFX followerShooterMotor1, TalonFX followerShooterMotor2, TalonFX followerShooterMotor3 , DoubleTopic speedTopic, DoubleTopic shooterKPTopic, DoubleTopic shooterKVTopic, PoseEst poseEst, ZoneTracking zones) {
         speedPub = speedTopic.publish();
         speedPub.setDefault(0.0);
 
@@ -64,7 +64,6 @@ public class Shooter extends SubsystemBase {
 
         this.poseEst = poseEst;
         this.zones = zones;
-        this.hood = hood;
         this.leaderShooterMotor = leaderShooterMotor;
         this.followerShooterMotor1 = followerShooterMotor1;
         this.followerShooterMotor2 = followerShooterMotor2;
@@ -80,67 +79,47 @@ public class Shooter extends SubsystemBase {
         //https://v6.docs.ctr-electronics.com/en/latest/docs/migration/migration-guide/control-requests-guide.html
    }
 
-    // private double getSpeed() {
-    //     double robotDistance = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
-    //     if(robotDistance < 50) {
-    //         hood.goToPosition(0);
-    //         return 35;
-    //     } else if(robotDistance >= 50 && robotDistance <= 62) {
-    //         hood.goToPosition(0);
-    //         return 40;
-    //     } else if(robotDistance >= 62 && robotDistance <= 74) {
-    //         hood.goToPosition(4.3);
-    //         return 40;
-    //     } else if(robotDistance >= 74 && robotDistance <= 86) {
-    //         hood.goToPosition(4.3);
-    //         return 45;
-    //     } else if(robotDistance >= 86 && robotDistance <= 98) {
-    //         hood.goToPosition(0);
-    //         return 45;
-    //     } else if(robotDistance >= 98 && robotDistance <= 110) {
-    //         hood.goToPosition(0);
-    //         return 50;
-    //     } else if(robotDistance >= 110 && robotDistance <= 124) {
-    //         hood.goToPosition(0);
-    //         return 50;
-    //     } else if(robotDistance >= 124 && robotDistance <= 136) {
-    //         hood.goToPosition(0);
-    //         return 55;
-    //     } else if(robotDistance >= 136 && robotDistance <= 148) {
-    //         hood.goToPosition(0);
-    //         return 55;
-    //     } else if(robotDistance >= 148 && robotDistance <= 160) {
-    //         hood.goToPosition(0);
-    //         return 60;
-    //     } else {
-    //         hood.goToPosition(0);
-    //         return 60;
-    //     }
-    // }
-
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         // Update speed in Network table
         speedPub.set(leaderShooterMotor.getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("Shooter Set Speed", getSpeed());
+        calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
+    }
 
-        autoSetShooterSpeed();
+    public double calculateShooterSpeed(double goalDistance) {
+        final double distanceOffset = 50;
+        final double minSpeed = 35;
+        final double maxSpeed = 100;
+        final double increasePerFoot = 2.9;
+        
+        double speed = minSpeed + (((goalDistance-distanceOffset)/12) * increasePerFoot);
+        SmartDashboard.putNumber("Calculated Shooter Speed", Math.min(speed, maxSpeed));
+        return Math.min(speed, maxSpeed);
     }
 
     // automatically change shooter speed based on how far from the goal
-    public void autoSetShooterSpeed() {
-        if(usingAutomaticSpeed) {
-            if(zones.currentZone() == FieldZones.NeutralZone) {
-                setMotorSpeedRPS(0);
-            } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
-                // setMotorSpeedRPS(getSpeed());
-                setMotorSpeedRPS(0);
-            } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
-                setMotorSpeedRPS(0);
-            }
-        }
-    }
+    // public double autoSetShooterSpeed() {
+    //     double distance = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
+    //     if(distance <= 56) {
+    //         return 37.5;
+    //     } else if(distance > 56 && distance <= 68) {
+    //         return 40;
+    //     } else if(distance > 68 && distance <= 80) {
+    //         return 45;
+    //     } else if(distance > 80 && distance <= 92) {
+    //         return 42;
+    //     } else if(distance > 92 && distance <= 104) {
+    //         return 45;
+    //     } else if(distance > 104 && distance <= 116) {
+    //         return 51;
+    //     } else if(distance < 116) {
+    //         return 51;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
 
     /**
      * Spin the shooter motors at a given speed.
@@ -161,13 +140,24 @@ public class Shooter extends SubsystemBase {
         leaderShooterMotor.setControl(Constants.ShooterConstants.shooterVelocity.withVelocity(RPS));
     }
 
+    public void startScoring() {
+        isScoring = true;
+    }
+
+    public void stopScoring() {
+        isScoring = false;
+    }
+
     /**
      * Stop the shooter motors.
      */
     public void stopMotors() {
         // Not sure how this works with the followers, experiment a lil
-        // leaderShooterMotor.stopMotor();
-        leaderShooterMotor.setControl(Constants.ShooterConstants.shooterVelocity.withVelocity(0));
+        leaderShooterMotor.stopMotor();
+        // leaderShooterMotor.setControl(Constants.ShooterConstants.shooterVelocity.withVelocity(0));
     }
-    
+
+    public double getCalculateSpeed(double goalDistance) {
+        return calculateShooterSpeed(goalDistance);
+    }
 }
