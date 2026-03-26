@@ -91,9 +91,9 @@ import edu.wpi.first.units.measure.Distance;
 
         public class IntakeConstants {
           //Position values for intake 
-            public static final double upPosition = 4.737;
-            public static final double middlePosition = -20.0;
-            public static final double downPosition = -48.5;
+            public static final double upPosition = -30;
+            public static final double middlePosition = -30;
+            public static final double downPosition = -60;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;

@@ -85,7 +85,10 @@ public class Shooter extends SubsystemBase {
         // Update speed in Network table
         speedPub.set(leaderShooterMotor.getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("Shooter Set Speed", getSpeed());
-        calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
+        // calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
+        if(isScoring) {
+            setMotorSpeedRPM(calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
+        }
     }
 
     public double calculateShooterSpeed(double goalDistance) {
@@ -98,28 +101,6 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Calculated Shooter Speed", Math.min(speed, maxSpeed));
         return Math.min(speed, maxSpeed);
     }
-
-    // automatically change shooter speed based on how far from the goal
-    // public double autoSetShooterSpeed() {
-    //     double distance = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
-    //     if(distance <= 56) {
-    //         return 37.5;
-    //     } else if(distance > 56 && distance <= 68) {
-    //         return 40;
-    //     } else if(distance > 68 && distance <= 80) {
-    //         return 45;
-    //     } else if(distance > 80 && distance <= 92) {
-    //         return 42;
-    //     } else if(distance > 92 && distance <= 104) {
-    //         return 45;
-    //     } else if(distance > 104 && distance <= 116) {
-    //         return 51;
-    //     } else if(distance < 116) {
-    //         return 51;
-    //     } else {
-    //         return 0;
-    //     }
-    // }
 
     /**
      * Spin the shooter motors at a given speed.

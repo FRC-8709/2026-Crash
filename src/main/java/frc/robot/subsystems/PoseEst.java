@@ -46,6 +46,7 @@ public class PoseEst extends SubsystemBase {
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
     private int[] validIDs = {18,19,20,21,24,25,26,27};
+    private LimelightHelpers.PoseEstimate mt2;
 
     //Limeligt positions
     private DoublePublisher distancePub, posXPub, posYPub;
@@ -71,11 +72,15 @@ public class PoseEst extends SubsystemBase {
         // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
         // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-        if (didInitialReset == false && mt2.tagCount >= 1){  
+        // if (didInitialReset == false && mt2.tagCount >= 1){  
+        //     drivetrain.resetPose(mt2.pose);
+        //     didInitialReset= true;
+        // };
+
+        if (mt2.tagCount >= 1){  
             drivetrain.resetPose(mt2.pose);
-            didInitialReset= true;
         };
     
         doRejectUpdate = false;
@@ -270,5 +275,9 @@ public class PoseEst extends SubsystemBase {
         goalFacingAngle = Units.Radians.of(Math.atan2(diffTranslation2d.getY(), diffTranslation2d.getX()));
 
         return goalFacingAngle;
+    }
+
+    public void resetBotPose() {
+        drivetrain.resetPose(mt2.pose);
     }
 }

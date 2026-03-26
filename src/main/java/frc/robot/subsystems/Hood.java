@@ -56,7 +56,8 @@ public class Hood extends SubsystemBase {
         
         distanceFromGoal = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
 
-        calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
+        // calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
+        goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
     }
 
     /**

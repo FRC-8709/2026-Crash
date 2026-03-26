@@ -115,7 +115,8 @@ public class IntakeLift extends SubsystemBase {
      * THE INTAKE SHOULD BE STOPPED ALREADY!
      */
     public void raiseLift() {
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.upPosition));
+        // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.upPosition));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
 
     }
 

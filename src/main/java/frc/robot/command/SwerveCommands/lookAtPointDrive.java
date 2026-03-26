@@ -60,12 +60,12 @@ public class lookAtPointDrive extends Command{
         alliance = DriverStation.getAlliance().orElse(Alliance.Red);
         drivetrain.setControl(
         driveWhileFacing
-            // .withVelocityX(-joystickLeft1.getY() * MaxSpeed)
-            // .withVelocityY(-joystickLeft1.getX() * MaxSpeed)
+            .withVelocityX(-joystickLeft1.getY() * MaxSpeed)
+            .withVelocityY(-joystickLeft1.getX() * MaxSpeed)
 
             // ps4controller drive (for testing at home - parker)
-            .withVelocityX(-controller.getLeftY() * MaxSpeed)
-            .withVelocityY(-controller.getLeftX() * MaxSpeed)
+            // .withVelocityX(-controller.getLeftY() * MaxSpeed)
+            // .withVelocityY(-controller.getLeftX() * MaxSpeed)
             .withMaxAbsRotationalRate(1 * MaxAngularRate)
             .withTargetDirection(getAngleToTarget())
         );

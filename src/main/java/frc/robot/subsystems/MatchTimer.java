@@ -26,4 +26,8 @@ public class MatchTimer extends SubsystemBase {
     public double getTeleopTime() {
         return teleopTimer.get();
     }
+
+    public boolean isRobotEnabled() {
+        return DriverStation.isEnabled();
+    }
 }

@@ -37,14 +37,14 @@ public class regularDrive extends Command{
     public void execute() {
         drivetrain.setControl(
         drive
-            // .withVelocityX(-joystickLeft1.getY() * MaxSpeed)
-            // .withVelocityY(-joystickLeft1.getX() * MaxSpeed)
-            // .withRotationalRate(-joystickLeft2.getX() * MaxAngularRate)
+            .withVelocityX(-joystickLeft1.getY() * MaxSpeed)
+            .withVelocityY(-joystickLeft1.getX() * MaxSpeed)
+            .withRotationalRate(-joystickLeft2.getX() * MaxAngularRate)
 
             // ps4controller drive (for testing at home - parker)
-                .withVelocityX(-controller.getLeftY() * MaxSpeed)
-                .withVelocityY(-controller.getLeftX() * MaxSpeed)
-                .withRotationalRate(-controller.getRightX() * MaxAngularRate)
+                // .withVelocityX(-controller.getLeftY() * MaxSpeed)
+                // .withVelocityY(-controller.getLeftX() * MaxSpeed)
+                // .withRotationalRate(-controller.getRightX() * MaxAngularRate)
         );
     }
 

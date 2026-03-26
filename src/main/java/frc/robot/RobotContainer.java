@@ -26,7 +26,6 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
-import edu.wpi.first.cscore.UsbCamera;
 // wpilib imports
 // import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -192,7 +191,9 @@ public class RobotContainer {
         Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
         Trigger inBlueAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.BlueAllianceZone);
         Trigger inRedAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.RedAllianceZone);
-    
+
+        //Match triggers
+        Trigger teleopEnabled = new Trigger(() -> s_MatchTimer.isRobotEnabled() == true);
     
         public RobotContainer() {
             // Set up which buttons do what
@@ -230,14 +231,6 @@ public class RobotContainer {
         //     )
         // );
 
-        /*
-         * 
-        Not actually this but something close
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() -> new SwerveRequest.FieldCentricFacingAngle().withTargetDirection(PoseEst.something()).withVelocityX(5).withVelocityY(5))
-        );
-        */
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
@@ -295,9 +288,11 @@ public class RobotContainer {
         
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
+            // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)));
         // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
-        joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+        joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+            // joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
         // joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
@@ -351,6 +346,8 @@ public class RobotContainer {
         ps4Circle.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
         // joystickLeft2Button3.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
         joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
+
+        teleopEnabled.onTrue(Commands.runOnce(() -> s_PoseEst.resetBotPose()));
     }
 
     public Command getAutonomousCommand() {
