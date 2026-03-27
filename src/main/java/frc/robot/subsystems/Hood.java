@@ -27,6 +27,7 @@ public class Hood extends SubsystemBase {
     private final ZoneTracking zones;
     private final PoseEst poseEst;
     private final Shooter shooter;
+    boolean hoodEnabled = false;
     
     double distanceFromGoal;
 
@@ -59,8 +60,20 @@ public class Hood extends SubsystemBase {
         distanceFromGoal = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
 
         // calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
-        if(DriverStation.isTeleopEnabled()) {
-            goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
+        // if(DriverStation.isTeleopEnabled()) {
+        //     goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
+        // }
+
+        if(hoodEnabled) {
+            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+                goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
+            } else if(zones.currentZone() == FieldZones.NeutralZone) {
+                goToPosition(10);
+            } else if(zones.currentZone() == FieldZones.NoZone || zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
+                goToPosition(0);
+            }
+        } else {
+            calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
         }
     }
 
@@ -125,5 +138,9 @@ public class Hood extends SubsystemBase {
     // stop & hold the hood
     public void stopHood() {
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(0));
+    }
+
+    public void toggleHood() {
+        hoodEnabled = !hoodEnabled;
     }
 }

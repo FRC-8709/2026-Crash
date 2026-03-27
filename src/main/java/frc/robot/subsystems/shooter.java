@@ -35,6 +35,7 @@ public class Shooter extends SubsystemBase {
     private final PoseEst poseEst;
     private final ZoneTracking zones;
     boolean isScoring = false;
+    double distanceFromGoal;
 
     TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -81,13 +82,22 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        distanceFromGoal = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
         // This method will be called once per scheduler run
         // Update speed in Network table
         speedPub.set(leaderShooterMotor.getVelocity().getValueAsDouble());
         // SmartDashboard.putNumber("Shooter Set Speed", getSpeed());
         // calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
         if(isScoring) {
-            setMotorSpeedRPM(calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
+            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+                setMotorSpeedRPM(calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
+            } else if(zones.currentZone() == FieldZones.NeutralZone) {
+                setMotorSpeedRPM(30);
+            } else if(zones.currentZone() == FieldZones.NoZone || zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
+                setMotorSpeedRPM(10);
+            }
+        } else {
+            calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
         }
     }
 

@@ -29,7 +29,7 @@ import edu.wpi.first.cscore.MjpegServer;
 // wpilib imports
 // import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -347,33 +347,55 @@ public class RobotContainer {
         // joystickLeft2Button3.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
         joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
 
-        teleopEnabled.onTrue(Commands.runOnce(() -> s_PoseEst.resetBotPose()));
+        // teleopEnabled.onTrue(Commands.runOnce(() -> s_PoseEst.resetBotPose()));
     }
 
     public Command getAutonomousCommand() {
         // return autos.getSelected();
         
-        // Simple drive forward auton
+        // Simple drive back for auton
         final var idle = new SwerveRequest.Idle();
+
         return Commands.sequence(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(.5)
-                .withVelocityY(0)
-                .withRotationalRate(0)
+            drivetrain.run(() ->
+                drivetrain.setControl(
+                    new SwerveRequest.FieldCentric()
+                        .withVelocityX(-0.5)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)
+                )  
             )
-            .withTimeout(5.0),
-            drivetrain.applyRequest(() -> idle),
-            // s_Hood.runOnce(()-> s_Hood.raiseHood()),
-            //new WaitCommand(1),
-            s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
-            new WaitCommand(1),
-            s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
-            new WaitCommand(5),
-            s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
-            s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
-            s_Indexer.runOnce(() -> s_Indexer.stopRoller())
+            .withTimeout(1),
+            drivetrain.run(() -> drivetrain.setControl(idle))
+            .withTimeout(.1),
+            s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()),
+            s_Hood.runOnce(() -> s_Hood.toggleHood()),
+            s_Shooter.runOnce(() -> s_Shooter.startScoring())
+            .withTimeout(1.25),
+            s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))
+            .withTimeout(5),
+            s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller())),
+            s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
         );
+
+        // return Commands.sequence(
+        //     drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-0.5)
+        //         .withVelocityY(0)
+        //         .withRotationalRate(0)).withTimeout(0.6)
+        //     drivetrain.applyRequest(() -> idle),
+        //     // s_Hood.runOnce(()-> s_Hood.raiseHood()),
+        //     //new WaitCommand(1),
+        //     s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
+        //     new WaitCommand(1),
+        //     s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
+        //     new WaitCommand(5),
+        //     s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
+        //     s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
+        //     s_Indexer.runOnce(() -> s_Indexer.stopRoller())
+        // );
     }
 
   
