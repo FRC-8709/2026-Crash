@@ -65,6 +65,7 @@ public class IntakeLift extends SubsystemBase {
 
         this.liftMotor = liftMotor;
         this.liftEncoder = liftEncoder;
+        // liftMotor.setPosition(0);
     }
 
     @Override

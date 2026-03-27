@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
         final double distanceOffset = 50;
         final double minSpeed = 35;
         final double maxSpeed = 100;
-        final double increasePerFoot = 2.9;
+        final double increasePerFoot = 2.25;
         
         double speed = minSpeed + (((goalDistance-distanceOffset)/12) * increasePerFoot);
         SmartDashboard.putNumber("Calculated Shooter Speed", Math.min(speed, maxSpeed));

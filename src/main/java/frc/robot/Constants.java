@@ -22,7 +22,7 @@ import edu.wpi.first.units.measure.Distance;
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
             public static final double shooterSpeed = 50;
-            public static final double autonShooterSpeed = 72;
+            public static final double autonShooterSpeed = 33;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
@@ -100,8 +100,9 @@ import edu.wpi.first.units.measure.Distance;
             public static final int liftMotorPort = 21;
 
             // Speed constants
-            private static final double rollerSpeed = -10;
-            private static final double reverseRollerSpeed=10;
+            private static final double rollerSpeed = -15;
+            private static final double reverseRollerSpeed=15;
+
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all

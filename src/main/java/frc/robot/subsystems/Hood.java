@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,7 @@ public class Hood extends SubsystemBase {
         this.zones = zones;
         this.poseEst = poseEst;
         this.shooter = shooter;
+        hoodMotor.setPosition(0);
    }
 
     @Override
@@ -57,7 +59,9 @@ public class Hood extends SubsystemBase {
         distanceFromGoal = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);
 
         // calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
-        goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
+        if(DriverStation.isTeleopEnabled()) {
+            goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
+        }
     }
 
     /**
@@ -78,41 +82,15 @@ public class Hood extends SubsystemBase {
         hoodMotor.setControl(Constants.HoodConstants.hoodVelocity.withVelocity(RPS));
     }
 
-    /**
-     * Set position multiplier for hood
-     * @param multiplier hood position
-     */
-    // public void autoPositionHood(double multiplier) {
-        // if(!manualHoodControl) {
-        //     if(zones.currentZone() == FieldZones.NeutralZone) {
-        //         goToPosition(10);
-        //     } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
-        //         goToPosition(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches) * multiplier);
-        //     } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
-        //         goToPosition(0);
-        //     }
-        // }
-
-        // if(!manualHoodControl) {
-        //     if(zones.currentZone() == FieldZones.NeutralZone) {
-        //         goToPosition(10);
-        //     } else if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
-        //         goToPosition(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
-        //     } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone || zones.currentZone() == FieldZones.NoZone) {
-        //         goToPosition(0);
-        //     }
-        // }
-        // SmartDashboard.putNumber("Estimated Hood Position", calculateHoodAngle(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
-    // }
-
     public double calculateHoodAngle(double robotDistance, double shooterSpeed) {
-        final double distanceOffset = 8;
+        final double distanceOffset = 3;
         final double minPos = 0;
-        final double maxPos = 25;
-        double clampedPosition = MathUtil.clamp(-0.495258 + (0.108459 * (robotDistance-distanceOffset)) + (-0.151605 * shooterSpeed), minPos, maxPos);
+        final double maxPos = 20;
+        double clampedPosition = MathUtil.clamp(-0.495258 + (0.108459 * (robotDistance+distanceOffset)) + (-0.151605 * shooterSpeed), minPos, maxPos);
         SmartDashboard.putNumber("Calculated Hood Position", clampedPosition);
         return clampedPosition;
     }
+
 
     // public double autoSetPosition() {
     //     double distance = Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches);

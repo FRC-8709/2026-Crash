@@ -63,6 +63,8 @@ public class PoseEst extends SubsystemBase {
         posXPub.setDefault(0.0);
         posYPub.setDefault(0.0);
         LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validIDs);
+        LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetIMUMode("limelight", 3);
     }
 
     @Override
@@ -71,7 +73,7 @@ public class PoseEst extends SubsystemBase {
         SmartDashboard.putString("perodicRun", "isRunning");
         // Updating robot pose based off limelight
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
-        // LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        // mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
         // if (didInitialReset == false && mt2.tagCount >= 1){  
@@ -96,7 +98,7 @@ public class PoseEst extends SubsystemBase {
         
         if(!doRejectUpdate){
             //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,999));
+            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,.7));
             drivetrain.addVisionMeasurement(
                 mt2.pose,
                 mt2.timestampSeconds);

@@ -34,6 +34,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.RawTopic;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -205,17 +206,15 @@ public class RobotContainer {
             SmartDashboard.putData("Auto Selection", autos);
 
             // Intake Commands
-            NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
-            NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
-            NamedCommands.registerCommand("raiseIntakeMiddle", new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
-            NamedCommands.registerCommand("stopIntake", new stopRollers(s_IntakeRoller));
-            NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
+            // NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
+            // NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
+            // NamedCommands.registerCommand("raiseIntakeMiddle", new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
+            // NamedCommands.registerCommand("stopIntake", new stopRollers(s_IntakeRoller));
+            // NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
 
-            //Shooter Commands
-            NamedCommands.registerCommand("startShooter", Commands.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
-            NamedCommands.registerCommand("startShooter", Commands.runOnce(()-> s_Shooter.stopMotors()));
-            NamedCommands.registerCommand("startIndexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(31)));
-            NamedCommands.registerCommand("stopIndexer", Commands.runOnce(()-> s_Indexer.setMotorSpeedRPM(0)));
+            // //Shooter Commands
+            // NamedCommands.registerCommand("startShooting", Commands.runOnce(()-> s_Shooter.calculateShooterSpeed(Units.Meters.of(s_PoseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches))).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(10).andThen(Commands.runOnce(() -> s_Shooter.stopMotors()))).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+            // NamedCommands.registerCommand("stopShooting", Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
     }
 
     private void configureBindings() {
@@ -278,6 +277,7 @@ public class RobotContainer {
         // or button1.or(button2).onTrue(command) for EITHER button being pressed, super easy and again, short and clean
 
         //PID TUNING CONTROLS
+        joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_Shooter.updatePIDValues()));
         joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_Shooter.updatePIDValues()));
 
         // SHOOTER CONTROLS
@@ -351,21 +351,29 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autos.getSelected();
+        // return autos.getSelected();
         
         // Simple drive forward auton
-        // final var idle = new SwerveRequest.Idle();
-        // return Commands.sequence(
-        //     // s_Hood.runOnce(()-> s_Hood.raiseHood()),
-        //     new WaitCommand(1),
-        //     s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
-        //     new WaitCommand(1),
-        //     s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
-        //     new WaitCommand(5),
-        //     s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
-        //     s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
-        //     s_Indexer.runOnce(() -> s_Indexer.stopRoller())
-        // );
+        final var idle = new SwerveRequest.Idle();
+        return Commands.sequence(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(.5)
+                .withVelocityY(0)
+                .withRotationalRate(0)
+            )
+            .withTimeout(5.0),
+            drivetrain.applyRequest(() -> idle),
+            // s_Hood.runOnce(()-> s_Hood.raiseHood()),
+            //new WaitCommand(1),
+            s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
+            new WaitCommand(1),
+            s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
+            new WaitCommand(5),
+            s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
+            s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
+            s_Indexer.runOnce(() -> s_Indexer.stopRoller())
+        );
     }
 
   
