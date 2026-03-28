@@ -189,20 +189,24 @@ public class PoseEst extends SubsystemBase {
         Translation2d robotPosition2d;
         Translation3d robotPosition3d, distanceFromGoal;
 
+        robotPosition2d = getPose2d().getTranslation();
+        robotPosition3d = new Translation3d(robotPosition2d).plus(new Translation3d(Inches.of(0), Inches.of(0), Constants.ShooterConstants.shooterHeight));
+
+
         if(alliance.equals(Alliance.Blue)) {
             targetGoal = Constants.FieldConstants.blueHubPosition;
-        } else if(alliance.equals(Alliance.Red)) {
+            return targetGoal.minus(robotPosition3d);
+        } else { //(alliance.equals(Alliance.Red)) {
             targetGoal = Constants.FieldConstants.redHubPosition;
+            return targetGoal.plus(robotPosition3d);
         }
 
         // Get the 2d position
-        robotPosition2d = getPose2d().getTranslation();
         // Now go up by shooterHeight inches
-        robotPosition3d = new Translation3d(robotPosition2d).plus(new Translation3d(Inches.of(0), Inches.of(0), Constants.ShooterConstants.shooterHeight));
 
         // Find the difference between the robot and the goal
         // Might have this backwards, check later
-        return targetGoal.minus(robotPosition3d);
+       // return targetGoal.minus(robotPosition3d);
     }
 
     /* Function to calculate the launch angle of the ball based on the distance and current flywheel velocity

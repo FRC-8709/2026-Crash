@@ -8,7 +8,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
@@ -55,15 +58,21 @@ public class lookAtPointDrive extends Command{
             dx = Constants.FieldConstants.redHubPosition.getMeasureX().in(Meters) - robotPose.getX();
             dy = Constants.FieldConstants.redHubPosition.getMeasureY().in(Meters) - robotPose.getY();
         }
-
-        // if(alliance.equals(Alliance.Red)) {
-        //     return new Rotation2d(Math.atan2(dy, dx) + Math.PI);
-        // } else if(alliance.equals(Alliance.Blue)) {
-        //     return new Rotation2d(Math.atan2(dy, dx));
-        // } else {
-        //     return new Rotation2d(Math.atan2(dy, dx));
-        // }
-        return new Rotation2d(Math.atan2(dy, dx));
+// robotPose.relativeTo(
+//         new Pose2d(
+//             field ledLength
+//             field width
+//             new Rotation2d(Units.degreesToRadians(180));
+//         )
+// );
+        if(alliance.equals(Alliance.Red)) {
+            return new Rotation2d(Math.atan2(dy, dx) + Math.PI);
+        } else if(alliance.equals(Alliance.Blue)) {
+            return new Rotation2d(Math.atan2(dy, dx));
+        } else {
+            return new Rotation2d(Math.atan2(dy, dx));
+        }
+        // return new Rotation2d(Math.atan2(dy, dx));
     }
 
     // private double allianceCheck() {
