@@ -21,13 +21,14 @@ import frc.robot.Constants;
 import frc.robot.helpers.Conversions;
 import frc.robot.subsystems.ZoneTracking.FieldZones;
 
+
 public class Hood extends SubsystemBase {
     // Hood motor
     private final TalonFX hoodMotor;
     private final ZoneTracking zones;
     private final PoseEst poseEst;
     private final Shooter shooter;
-    boolean hoodEnabled = false;
+    boolean hoodEnabled = true;
     
     double distanceFromGoal;
 
