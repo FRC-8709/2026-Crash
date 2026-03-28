@@ -355,28 +355,38 @@ public class RobotContainer {
         
         // Simple drive back for auton
         final var idle = new SwerveRequest.Idle();
+        
 
         return Commands.sequence(
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
-            drivetrain.run(() ->
+            drivetrain.runOnce(() ->
                 drivetrain.setControl(
                     new SwerveRequest.FieldCentric()
-                        .withVelocityX(-0.5)
+                        .withVelocityX(-1)
                         .withVelocityY(0)
                         .withRotationalRate(0)
                 )  
-            )
-            .withTimeout(1),
-            drivetrain.run(() -> drivetrain.setControl(idle))
-            .withTimeout(.1),
-            s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()),
+            ),
+            new WaitCommand(.85),
+            drivetrain.runOnce(() ->
+                drivetrain.setControl(
+                    new SwerveRequest.FieldCentric()
+                        .withVelocityX(0)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)
+                )  
+            ),
+
+            // drivetrain.run(() -> drivetrain.setControl(idle)),
+            new WaitCommand(.1),
+            // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()),
             s_Hood.runOnce(() -> s_Hood.toggleHood()),
-            s_Shooter.runOnce(() -> s_Shooter.startScoring())
-            .withTimeout(1.25),
-            s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))
-            .withTimeout(5),
-            s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller())),
-            s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
+            s_Shooter.runOnce(() -> s_Shooter.startScoring()),
+            new WaitCommand(1.25),
+            s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
+            new WaitCommand(1),
+            s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller()))
+            // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
         );
 
         // return Commands.sequence(
