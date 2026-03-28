@@ -45,7 +45,7 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
-    private int[] validIDs = {18,19,20,21,24,25,26,27,4,3,5,8,9,10,11,2};
+    private int[] validIDs = {18,19,20,21,24,25,26,27};
     private LimelightHelpers.PoseEstimate mt2;
 
     //Limeligt positions
@@ -76,14 +76,14 @@ public class PoseEst extends SubsystemBase {
         // mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 
-        // if (didInitialReset == false && mt2.tagCount >= 1){  
-        //     drivetrain.resetPose(mt2.pose);
-        //     didInitialReset= true;
-        // };
-
-        if (mt2.tagCount >= 1){  
+        if (didInitialReset == false && mt2.tagCount >= 1){  
             drivetrain.resetPose(mt2.pose);
+            didInitialReset= true;
         };
+
+        // if (mt2.tagCount >= 1){  
+        //     drivetrain.resetPose(mt2.pose);
+        // };
     
         doRejectUpdate = false;
    

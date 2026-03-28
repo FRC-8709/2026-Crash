@@ -56,14 +56,14 @@ public class lookAtPointDrive extends Command{
             dy = Constants.FieldConstants.redHubPosition.getMeasureY().in(Meters) - robotPose.getY();
         }
 
-        if(alliance.equals(Alliance.Red)) {
-            return new Rotation2d(Math.atan2(dy, dx) + Math.PI);
-        } else if(alliance.equals(Alliance.Blue)) {
-            return new Rotation2d(Math.atan2(dy, dx));
-        } else {
-            return new Rotation2d(Math.atan2(dy, dx));
-        }
-        // return new Rotation2d(Math.atan2(dy, dx));
+        // if(alliance.equals(Alliance.Red)) {
+        //     return new Rotation2d(Math.atan2(dy, dx) + Math.PI);
+        // } else if(alliance.equals(Alliance.Blue)) {
+        //     return new Rotation2d(Math.atan2(dy, dx));
+        // } else {
+        //     return new Rotation2d(Math.atan2(dy, dx));
+        // }
+        return new Rotation2d(Math.atan2(dy, dx));
     }
 
     // private double allianceCheck() {

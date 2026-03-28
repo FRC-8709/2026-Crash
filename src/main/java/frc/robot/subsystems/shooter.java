@@ -89,12 +89,16 @@ public class Shooter extends SubsystemBase {
         // SmartDashboard.putNumber("Shooter Set Speed", getSpeed());
         // calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
         if(isScoring) {
-            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone || zones.currentZone() == FieldZones.NoZone) {
+            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.NoZone) {
                 setMotorSpeedRPM(calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
             } else if(zones.currentZone() == FieldZones.NeutralZone) {
-                setMotorSpeedRPM(50);
+                // setMotorSpeedRPM(50);
+                setMotorSpeedRPM(37.5);
             } else if(zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
-                setMotorSpeedRPM(10);
+                // setMotorSpeedRPM(10);
+                setMotorSpeedRPM(37.5);
+            } else if(zones.currentZone() == FieldZones.RedAllianceZone) {
+                setMotorSpeedRPM(37.5);
             }
         } else {
             calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));

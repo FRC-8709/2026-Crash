@@ -363,14 +363,14 @@ public class RobotContainer {
         
 
         return Commands.sequence(
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
+            // drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
             drivetrain.runOnce(() ->
                 drivetrain.setControl(
                     new SwerveRequest.FieldCentric()
-                        .withVelocityX(-1)
+                        .withVelocityX(1)
                         .withVelocityY(0)
                         .withRotationalRate(0)
-                )  
+                )
             ),
             new WaitCommand(.85),
             drivetrain.runOnce(() ->
