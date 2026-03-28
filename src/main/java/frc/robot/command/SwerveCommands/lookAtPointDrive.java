@@ -2,9 +2,12 @@ package frc.robot.command.SwerveCommands;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.security.AllPermission;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
@@ -52,8 +55,26 @@ public class lookAtPointDrive extends Command{
             dx = Constants.FieldConstants.redHubPosition.getMeasureX().in(Meters) - robotPose.getX();
             dy = Constants.FieldConstants.redHubPosition.getMeasureY().in(Meters) - robotPose.getY();
         }
-        return new Rotation2d(Math.atan2(dy, dx));
+
+        if(alliance.equals(Alliance.Red)) {
+            return new Rotation2d(Math.atan2(dy, dx) + Math.PI);
+        } else if(alliance.equals(Alliance.Blue)) {
+            return new Rotation2d(Math.atan2(dy, dx));
+        } else {
+            return new Rotation2d(Math.atan2(dy, dx));
+        }
+        // return new Rotation2d(Math.atan2(dy, dx));
     }
+
+    // private double allianceCheck() {
+    //     if(alliance.equals(Alliance.Red)) {
+    //         return 180;
+    //     } else if(alliance.equals(Alliance.Blue)) {
+    //         return 0;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
 
     @Override
     public void execute() {
