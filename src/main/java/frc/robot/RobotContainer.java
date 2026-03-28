@@ -151,11 +151,13 @@ public class RobotContainer {
         private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
         private final JoystickButton joystickRight2Button1 = new JoystickButton(joystickRight2, 1);
         private final JoystickButton joystickRight2Button2 = new JoystickButton(joystickRight2, 2);
+        private final JoystickButton joystickRight2Button5 = new JoystickButton(joystickRight2, 5);
     
         // Hood test buttons
         private final JoystickButton joystickLeft2Button7 = new JoystickButton(joystickLeft2, 7);
         private final JoystickButton joystickLeft2Button9 = new JoystickButton(joystickLeft2, 9);
         private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
+        private final JoystickButton joystickLeft2Button12 = new JoystickButton(joystickLeft2, 12);
     
         
         // Swerve instance declaration
@@ -278,7 +280,7 @@ public class RobotContainer {
 
         //PID TUNING CONTROLS
         joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_Shooter.updatePIDValues()));
-        joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_Shooter.updatePIDValues()));
+        joystickLeft2Button1.onTrue(Commands.runOnce(()-> s_IntakeRoller.updatePIDValues()));
 
         // SHOOTER CONTROLS
         // Turn shooter on/off
@@ -288,10 +290,10 @@ public class RobotContainer {
         
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
             // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)));
         // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
-        joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+        joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(Commands.runOnce(() -> s_DriveControl.stopTargeting())));
             // joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
         // joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
@@ -305,6 +307,8 @@ public class RobotContainer {
         //  s_Indexer.runOnce(()-> s_Indexer.stopRoller())
         // ));
         // HOOD CONTROLS
+
+        joystickLeft2Button12.onTrue(Commands.runOnce(() -> s_Hood.toggleHood()));
 
         joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(100)));
         joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(4.5)));
@@ -334,8 +338,9 @@ public class RobotContainer {
         //button.onTrue(new lowerLift().andThen(new startRollers()));
         //INTAKE LIFT
         joystickRight2Button1.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(24))).onFalse(Commands.runOnce(()-> s_IntakeLift.stopLift()));
-        joystickRight2Button2.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-24))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
-
+        // joystickRight2Button2.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-24))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+        joystickRight2Button5.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-24))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+        
 
         joystickRight1Button7.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
         joystickRight1Button8.onTrue(new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
@@ -384,7 +389,7 @@ public class RobotContainer {
             s_Shooter.runOnce(() -> s_Shooter.startScoring()),
             new WaitCommand(1.25),
             s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
-            new WaitCommand(1),
+            new WaitCommand(5),
             s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller()))
             // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
         );

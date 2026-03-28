@@ -27,6 +27,12 @@ public class DriveControl extends SubsystemBase {
         
     }
 
+    public void stopTargeting() {
+        new regularDrive(drivetrain, joystickLeft1, joystickLeft2, controller).schedule();
+        isTargeting = false;
+        SmartDashboard.putBoolean("isRobotTargeting", isTargeting);
+    }
+
     public void toggleTargeting() {
         if(!isTargeting) {
             new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller).schedule();

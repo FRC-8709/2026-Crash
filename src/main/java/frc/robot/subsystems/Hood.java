@@ -28,7 +28,7 @@ public class Hood extends SubsystemBase {
     private final ZoneTracking zones;
     private final PoseEst poseEst;
     private final Shooter shooter;
-    boolean hoodEnabled = true;
+    boolean hoodEnabled = false;
     
     double distanceFromGoal;
 
@@ -55,6 +55,7 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("isHoodEnabled", hoodEnabled);
         SmartDashboard.putNumber("Hood Speed", hoodMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Hood Position", hoodMotor.getPosition().getValueAsDouble());
         
@@ -66,12 +67,10 @@ public class Hood extends SubsystemBase {
         // }
 
         if(hoodEnabled) {
-            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone || zones.currentZone() == FieldZones.NoZone) {
                 goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
             } else if(zones.currentZone() == FieldZones.NeutralZone) {
                 goToPosition(10);
-            } else if(zones.currentZone() == FieldZones.NoZone || zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
-                goToPosition(0);
             }
         } else {
             calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
