@@ -367,7 +367,7 @@ public class RobotContainer {
             drivetrain.runOnce(() ->
                 drivetrain.setControl(
                     new SwerveRequest.FieldCentric()
-                        .withVelocityX(1)
+                        .withVelocityX(-1)
                         .withVelocityY(0)
                         .withRotationalRate(0)
                 )

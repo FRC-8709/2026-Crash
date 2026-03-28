@@ -67,13 +67,12 @@ public class Hood extends SubsystemBase {
         // }
 
         if(hoodEnabled) {
-            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.NoZone) {
-                // goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
-                goToPosition(1);
+            if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
+                goToPosition(calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal)));
             } else if(zones.currentZone() == FieldZones.NeutralZone) {
                 goToPosition(10);
-            } else if(zones.currentZone() == FieldZones.RedAllianceZone) {
-                goToPosition(1);
+            } else if(zones.currentZone() == FieldZones.NoZone || zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
+                goToPosition(0);
             }
         } else {
             calculateHoodAngle(distanceFromGoal, shooter.getCalculateSpeed(distanceFromGoal));
