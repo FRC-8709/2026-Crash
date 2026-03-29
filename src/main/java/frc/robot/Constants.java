@@ -21,8 +21,8 @@ import edu.wpi.first.units.measure.Distance;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = -100;
-            public static final double autonShooterSpeed = -72;
+            public static final double shooterSpeed = 37.5;
+            public static final double autonShooterSpeed = 37.5;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
@@ -38,8 +38,8 @@ import edu.wpi.first.units.measure.Distance;
     
 
             //HOOD POSITIONS
-            public static final double slightAngle = 5;
-            public static final double passAngle = 8;
+            public static final double slightAngle = 1;
+            public static final double passAngle = 10;
 
             public static final PositionVoltage hoodPosition = new PositionVoltage(0);
 
@@ -63,17 +63,17 @@ import edu.wpi.first.units.measure.Distance;
 
         public class IntakeConstants {
           //Position values for intake 
-            public static final double upPosition = 4.737;
-            public static final double middlePosition = -20.0;
-            public static final double downPosition = -48.5;
+            public static final double upPosition = -30;
+            public static final double middlePosition = -30.0;
+            public static final double downPosition = -60;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
             public static final int liftMotorPort = 21;
 
             // Speed constants
-            private static final double rollerSpeed = -10;
-            private static final double reverseRollerSpeed=10;
+            private static final double rollerSpeed = -5;
+            private static final double reverseRollerSpeed=5;
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all

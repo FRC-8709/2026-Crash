@@ -27,6 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // custom imports
 import frc.robot.Constants;
@@ -36,7 +37,7 @@ import frc.robot.helpers.LimelightHelpers;
 public class PoseEst extends SubsystemBase {
 
 
-    
+    private final Field2d fieldMap = new Field2d();
     private CommandSwerveDrivetrain drivetrain;
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
@@ -116,6 +117,10 @@ public class PoseEst extends SubsystemBase {
         
         // Based on math, which way should the robot face to point at the goal?
         SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle().in(Degree));
+
+        // Field map
+        fieldMap.setRobotPose(drivetrain.getState().Pose);
+        SmartDashboard.putData("Field Map", fieldMap);
 
         // Where does the ROBOT think it is (x and y coordinates this time)
         LimelightDistance();

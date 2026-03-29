@@ -128,7 +128,8 @@ public class RobotContainer {
 
     private final JoystickButton joystickLeft2Button1 = new JoystickButton(joystickLeft2, 1);
     private final JoystickButton joystickRight2Button1 = new JoystickButton(joystickRight2, 1);
-    private final JoystickButton joystickRight2Button2 = new JoystickButton(joystickRight2, 2);
+    // private final JoystickButton joystickRight2Button2 = new JoystickButton(joystickRight2, 2);
+    private final JoystickButton joystickRight2Button5 = new JoystickButton(joystickRight2, 5);
     
     // Swerve instance declaration
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -264,8 +265,8 @@ public class RobotContainer {
 
         // INDEXER CONTROLS
         // Turn indexer on/off
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-31))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
         
         
 
@@ -277,7 +278,7 @@ public class RobotContainer {
         //button.onTrue(new lowerLift().andThen(new startRollers()));
         //INTAKE LIFT
         joystickRight2Button1.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(24))).onFalse(Commands.runOnce(()-> s_IntakeLift.stopLift()));
-        joystickRight2Button2.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-24))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
+        joystickRight2Button5.whileTrue(Commands.runOnce(() -> s_IntakeLift.setMotorSpeedRPM(-24))).onFalse(Commands.runOnce(() -> s_IntakeLift.stopLift()));
 
 
         joystickRight1Button7.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
@@ -292,8 +293,27 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // Simple drive forward auton
-        // final var idle = new SwerveRequest.Idle();
+        final var idle = new SwerveRequest.Idle();
         return Commands.sequence(
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
+            drivetrain.runOnce(() ->
+                drivetrain.setControl(
+                    new SwerveRequest.FieldCentric()
+                        .withVelocityX(-1)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)
+            )),
+            new WaitCommand(.85),
+
+            drivetrain.runOnce(() ->
+                drivetrain.setControl(
+                    new SwerveRequest.FieldCentric()
+                        .withVelocityX(0)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)
+                )
+            ),
+            new WaitCommand(.1),
             
             s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
             new WaitCommand(1),
