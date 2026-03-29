@@ -159,7 +159,6 @@ public class Hood extends SubsystemBase {
 
     }
 
-
     public void goToPosition(double targetPos) {
         currentPos = hoodEncoder.getAbsolutePosition().getValueAsDouble();
         hoodMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(targetPos));
