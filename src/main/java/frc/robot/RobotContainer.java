@@ -240,7 +240,7 @@ public class RobotContainer {
         
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed))).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-35.0))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed))).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
         // joystickLeft2Button6.onTrue(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed.andThen(new WaitCommand(1)).andThen(() -> s_Indexer.setMotorSpeedRPM(3))));
@@ -265,8 +265,8 @@ public class RobotContainer {
 
         // INDEXER CONTROLS
         // Turn indexer on/off
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-31))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
-        joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
+        // joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-31))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        // joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
         
         
 

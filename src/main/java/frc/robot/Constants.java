@@ -21,8 +21,8 @@ import edu.wpi.first.units.measure.Distance;
             // but for now this is fine
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
-            public static final double shooterSpeed = 37.5;
-            public static final double autonShooterSpeed = 37.5;
+            public static final double shooterSpeed = 38.5;
+            public static final double autonShooterSpeed = 39;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
@@ -65,7 +65,7 @@ import edu.wpi.first.units.measure.Distance;
           //Position values for intake 
             public static final double upPosition = -30;
             public static final double middlePosition = -30.0;
-            public static final double downPosition = -60;
+            public static final double downPosition = -62;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
