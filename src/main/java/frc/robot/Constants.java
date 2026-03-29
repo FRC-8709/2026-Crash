@@ -22,7 +22,8 @@ import edu.wpi.first.units.measure.Distance;
 
             // Kind of a misnomer cause speed can't be negative but whatever we are already using shooterVelocity
             public static final double shooterSpeed = 38.5;
-            public static final double autonShooterSpeed = 39;
+            public static final double shooterFasterSpeed = 41;
+            public static final double autonShooterSpeed = 42;
 
             public static final VelocityVoltage shooterVelocity = new VelocityVoltage(shooterSpeed);
             
