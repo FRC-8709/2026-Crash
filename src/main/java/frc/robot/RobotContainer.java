@@ -157,6 +157,8 @@ public class RobotContainer {
         private final JoystickButton joystickLeft2Button7 = new JoystickButton(joystickLeft2, 7);
         private final JoystickButton joystickLeft2Button9 = new JoystickButton(joystickLeft2, 9);
         private final JoystickButton joystickLeft2Button11 = new JoystickButton(joystickLeft2,11 );
+        private final JoystickButton joystickLeft2Button12 = new JoystickButton(joystickLeft2,12 );
+
     
         
         // Swerve instance declaration
@@ -310,6 +312,7 @@ public class RobotContainer {
         joystickLeft2Button7.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(100)));
         joystickLeft2Button9.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(4.5)));
         joystickLeft2Button11.onTrue(Commands.runOnce(() -> s_Hood.goToPosition(0)));
+        joystickLeft2Button12.onTrue(Commands.runOnce(() -> s_Hood.toggleHood()));
 
         joystickLeft2Button8.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(.5))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
         joystickLeft2Button10.onTrue(Commands.runOnce(() -> s_Hood.setMotorSpeedRPS(-.5))).onFalse(Commands.runOnce(() -> s_Hood.stopHood()));
@@ -361,7 +364,7 @@ public class RobotContainer {
             drivetrain.runOnce(() ->
                 drivetrain.setControl(
                     new SwerveRequest.FieldCentric()
-                        .withVelocityX(1)
+                        .withVelocityX(-1)
                         .withVelocityY(0)
                         .withRotationalRate(0)
                 )
@@ -374,15 +377,15 @@ public class RobotContainer {
                         .withVelocityY(0)
                         .withRotationalRate(0)
                 )  
-            )
-            // new WaitCommand(.1),
+            ),
+            new WaitCommand(.1),
             // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()),
-            // s_Hood.runOnce(() -> s_Hood.toggleHood()),
-            // s_Shooter.runOnce(() -> s_Shooter.startScoring()),
-            // new WaitCommand(1.25),
-            // s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
-            // new WaitCommand(5),
-            // s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller()))
+            s_Hood.runOnce(() -> s_Hood.toggleHood()),
+            s_Shooter.runOnce(() -> s_Shooter.startScoring()),
+            new WaitCommand(1.25),
+            s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
+            new WaitCommand(5),
+            s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller()))
             // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
         );
 

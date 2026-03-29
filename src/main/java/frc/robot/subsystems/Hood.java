@@ -54,6 +54,7 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("isHoodEnabled", hoodEnabled);
         SmartDashboard.putNumber("Hood Speed", hoodMotor.getVelocity().getValueAsDouble());
         SmartDashboard.putNumber("Hood Position", hoodMotor.getPosition().getValueAsDouble());
         

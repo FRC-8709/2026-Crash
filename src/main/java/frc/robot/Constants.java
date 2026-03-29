@@ -93,7 +93,7 @@ import edu.wpi.first.units.measure.Distance;
           //Position values for intake 
             public static final double upPosition = -30;
             public static final double middlePosition = -30;
-            public static final double downPosition = -60;
+            public static final double downPosition = -62;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
