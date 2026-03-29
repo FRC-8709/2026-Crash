@@ -92,7 +92,7 @@ public class Shooter extends SubsystemBase {
             if(zones.currentZone() == FieldZones.BlueAllianceZone || zones.currentZone() == FieldZones.RedAllianceZone) {
                 setMotorSpeedRPM(calculateShooterSpeed(Units.Meters.of(poseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches)));
             } else if(zones.currentZone() == FieldZones.NeutralZone) {
-                setMotorSpeedRPM(30);
+                setMotorSpeedRPM(50);
             } else if(zones.currentZone() == FieldZones.NoZone || zones.currentZone() == FieldZones.BlueTransitionZone || zones.currentZone() == FieldZones.RedTransitionZone) {
                 setMotorSpeedRPM(10);
             }
