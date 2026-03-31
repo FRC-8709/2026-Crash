@@ -292,7 +292,10 @@ public class RobotContainer {
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
         joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
-            // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)));
+        
+        ///testing indexer
+        
+        //joystickRight2Button2.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)));
         // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(() -> s_DriveControl.stopTargeting()));
             // joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
