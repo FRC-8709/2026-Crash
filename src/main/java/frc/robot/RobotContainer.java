@@ -76,6 +76,8 @@ import frc.robot.subsystems.ScoringControl;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ZoneTracking;
 import frc.robot.subsystems.ZoneTracking.FieldZones;
+// Helper imports
+import frc.robot.helpers.AllianceInfo;
 
 public class RobotContainer {
 
@@ -205,6 +207,7 @@ public class RobotContainer {
         public RobotContainer() {
             // Set up which buttons do what
             configureBindings();
+            gyro.setYaw(AllianceInfo.getAllianceRotation().getDegrees());
             //180 flip orientaion button if bot is set up backwards
             SmartDashboard.putData("Flip Heading 180°",
                 new InstantCommand(() -> gyro.setYaw(180)).ignoringDisable(true));
@@ -268,8 +271,9 @@ public class RobotContainer {
         */
 
         // Reset the field-centric heading on left bumper press.
-        joystickLeft1Button1.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        ps4X.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        // Change to get starting pose
+        joystickLeft1Button1.onTrue(drivetrain.runOnce(() -> drivetrain.resetPose(new Pose2d(Constants.FieldConstants.redCorner, AllianceInfo.getAllianceRotation()))));
+        ps4X.onTrue(drivetrain.runOnce(() -> drivetrain.resetPose(new Pose2d(Constants.FieldConstants.redCorner, AllianceInfo.getAllianceRotation()))));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 

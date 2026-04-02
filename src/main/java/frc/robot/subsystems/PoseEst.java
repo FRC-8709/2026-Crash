@@ -75,7 +75,7 @@ public class PoseEst extends SubsystemBase {
         LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
         // mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-
+        
         if (didInitialReset == false && mt2.tagCount >= 1){  
             drivetrain.resetPose(mt2.pose);
             didInitialReset= true;
@@ -117,7 +117,7 @@ public class PoseEst extends SubsystemBase {
 
         // Where does the LIMELIGHT think we are?
         SmartDashboard.putNumber("MegaTag2 Pose X", mt2.pose.getMeasureX().in(Inches));
-        SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureX().in(Inches));
+        SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureY().in(Inches));
         SmartDashboard.putNumber("MegaTag2 Pose Angle", mt2.pose.getRotation().getDegrees());
 
         // Did the limelight ever try to tell the drivetrain where it thinks we are?

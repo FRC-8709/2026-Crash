@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 
@@ -125,5 +126,7 @@ import edu.wpi.first.units.measure.Distance;
             // Also actually add the real position, I just made this up for testing
             public static final Translation3d blueHubPosition = new Translation3d(Units.Inches.of(181.56), Units.Inches.of(158.32), Units.Inches.of(72));
             public static final Translation3d redHubPosition = new Translation3d(Units.Inches.of(468.56), Units.Inches.of(158.32), Units.Inches.of(72));
+
+            public static final Translation2d redCorner = new Translation2d(Units.Inches.of(651.22), Units.Inches.of(317.60));
         }
 }

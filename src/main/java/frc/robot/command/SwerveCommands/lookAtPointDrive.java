@@ -66,7 +66,7 @@ public class lookAtPointDrive extends Command{
 //         )
 // );
         if(alliance.equals(Alliance.Red)) {
-            return new Rotation2d(Math.atan2(dy, dx));
+            return new Rotation2d(Math.atan2(dy, dx)).plus(Rotation2d.k180deg);
         } else if(alliance.equals(Alliance.Blue)) {
             return new Rotation2d(Math.atan2(dy, dx));
         } else {
