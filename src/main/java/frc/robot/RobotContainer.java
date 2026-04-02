@@ -202,6 +202,11 @@ public class RobotContainer {
             // Set up which buttons do what
             configureBindings();
 
+            //adds a button to Dashboard that can flip the bots heading
+            SmartDashboard.putData("Flip Heading 180°",
+                new InstantCommand(() -> PoseEst.flipHeading(), PoseEst)
+                    .ignoringDisable(true));
+
             // Register Auton Stuff
             // list for auton selection (automatically adds options based on paths made)
             autos = AutoBuilder.buildAutoChooser();

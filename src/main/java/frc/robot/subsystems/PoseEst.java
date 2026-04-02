@@ -142,6 +142,11 @@ public class PoseEst extends SubsystemBase {
     private Pose2d getPose2d(){
         return drivetrain.getState().Pose;
     }
+    
+    public void flipHeading() {
+        double flipped = MathUtil.inputModulus(gyro.getYaw().getValueAsDouble() + 180.0, -180.0, 180.0);
+        gyro.setYaw(flipped);
+    }
 
     private double getRotation(){
         return getPose2d().getRotation().getDegrees();
