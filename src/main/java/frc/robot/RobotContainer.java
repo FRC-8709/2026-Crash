@@ -11,7 +11,7 @@ import static edu.wpi.first.units.Units.*;
 import javax.print.attribute.standard.JobHoldUntil;
 
 // pheonix6 imports
-
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -20,12 +20,12 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.math.MathUtil;
 // wpilib imports
 // import com.pathplanner.lib.auto.NamedCommands;
 // import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -197,16 +198,21 @@ public class RobotContainer {
 
         //Match triggers
         Trigger teleopEnabled = new Trigger(() -> s_MatchTimer.isRobotEnabled() == true);
-    
+        public void flipHeading() {
+        double flipped = MathUtil.inputModulus(gyro.getYaw().getValueAsDouble() + 180.0, -180.0, 180.0);
+        gyro.setYaw(flipped);
+        }
         public RobotContainer() {
             // Set up which buttons do what
             configureBindings();
-
+            //180 flip orientaion button if bot is set up backwards
+            SmartDashboard.putData("Flip Heading 180°",
+                new InstantCommand(() -> gyro.setYaw(180)).ignoringDisable(true));
             // Register Auton Stuff
             // list for auton selection (automatically adds options based on paths made)
             autos = AutoBuilder.buildAutoChooser();
             SmartDashboard.putData("Auto Selection", autos);
-
+            
             // Intake Commands
             // NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
             // NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
@@ -218,7 +224,8 @@ public class RobotContainer {
             // NamedCommands.registerCommand("startShooting", Commands.runOnce(()-> s_Shooter.calculateShooterSpeed(Units.Meters.of(s_PoseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches))).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(10).andThen(Commands.runOnce(() -> s_Shooter.stopMotors()))).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
             // NamedCommands.registerCommand("stopShooting", Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
     }
-
+  
+    
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.

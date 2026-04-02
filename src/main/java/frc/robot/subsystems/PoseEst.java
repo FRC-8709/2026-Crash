@@ -45,7 +45,7 @@ public class PoseEst extends SubsystemBase {
     private Pigeon2 gyro;
     private boolean doRejectUpdate = false;
     private boolean didInitialReset = false;
-    private int[] validIDs = {18,19,20,21,24,25,26,27};
+    private int[] validIDs = {9, 10, 18,19,20,21,24,25,26,27};
     private LimelightHelpers.PoseEstimate mt2;
 
     //Limeligt positions
@@ -195,10 +195,10 @@ public class PoseEst extends SubsystemBase {
 
         if(alliance.equals(Alliance.Blue)) {
             targetGoal = Constants.FieldConstants.blueHubPosition;
-            return targetGoal.minus(robotPosition3d);
-        } else { //(alliance.equals(Alliance.Red)) {
+            // return targetGoal.minus(robotPosition3d);
+        } else if(alliance.equals(Alliance.Red)) {
             targetGoal = Constants.FieldConstants.redHubPosition;
-            return targetGoal.plus(robotPosition3d);
+            // return targetGoal.plus(robotPosition3d);
         }
 
         // Get the 2d position
@@ -206,7 +206,7 @@ public class PoseEst extends SubsystemBase {
 
         // Find the difference between the robot and the goal
         // Might have this backwards, check later
-       // return targetGoal.minus(robotPosition3d);
+       return targetGoal.minus(robotPosition3d);
     }
 
     /* Function to calculate the launch angle of the ball based on the distance and current flywheel velocity
