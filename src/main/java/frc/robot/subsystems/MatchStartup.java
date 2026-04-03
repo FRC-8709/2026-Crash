@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.helpers.AllianceInfo;
+import frc.robot.helpers.LimelightHelpers;
 import frc.robot.RobotContainer;
  
 
@@ -25,6 +26,7 @@ private Pigeon2 gyro;
     public void periodic() {
         if(DriverStation.isDisabled()){
         gyro.setYaw(AllianceInfo.getAllianceRotation().getDegrees());
+        LimelightHelpers.SetIMUMode("limelight", 1); // Seed internal IMU
         }
     }
 }
