@@ -70,6 +70,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeLift;
 import frc.robot.subsystems.IntakeRoller;
 import frc.robot.subsystems.LedControl;
+import frc.robot.subsystems.MatchStartup;
 import frc.robot.subsystems.MatchTimer;
 import frc.robot.subsystems.PoseEst;
 import frc.robot.subsystems.ScoringControl;
@@ -192,6 +193,8 @@ public class RobotContainer {
         private final ScoringControl s_ScoringControl = new ScoringControl(s_ZoneTracking, s_PoseEst);
 
         private final DriveControl s_DriveControl = new DriveControl(drivetrain, joystickLeft1, joystickLeft2, controller);
+
+        private final MatchStartup s_MatchStartup = new MatchStartup(gyro);
     
         // Field zone triggers
         Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
