@@ -133,7 +133,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
-        configureAutoBuilder();
+        // configureAutoBuilder();
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -313,7 +313,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         throw new UnsupportedOperationException("Unimplemented method 'setControl'");
     }
 
-    private void configureAutoBuilder() {
+    public void configureAutoBuilder() {
         try {
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(

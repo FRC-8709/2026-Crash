@@ -82,8 +82,7 @@ import frc.robot.helpers.AllianceInfo;
 
 public class RobotContainer {
 
-
-    private SendableChooser<Command> autos = new SendableChooser<>();
+        private SendableChooser<Command> autos = new SendableChooser<>();
     
         // Set up instance of the network table so we can connect to it
         NetworkTableInstance inst = NetworkTableInstance.getDefault();
@@ -203,21 +202,26 @@ public class RobotContainer {
 
         //Match triggers
         Trigger teleopEnabled = new Trigger(() -> s_MatchTimer.isRobotEnabled() == true);
+
         public void flipHeading() {
-        double flipped = MathUtil.inputModulus(gyro.getYaw().getValueAsDouble() + 180.0, -180.0, 180.0);
-        gyro.setYaw(flipped);
+            double flipped = MathUtil.inputModulus(gyro.getYaw().getValueAsDouble() + 180.0, -180.0, 180.0);
+            gyro.setYaw(flipped);
         }
+
         public RobotContainer() {
             // Set up which buttons do what
             configureBindings();
+            
             gyro.setYaw(AllianceInfo.getAllianceRotation().getDegrees());
             //180 flip orientaion button if bot is set up backwards
             SmartDashboard.putData("Flip Heading 180°",
                 new InstantCommand(() -> gyro.setYaw(180)).ignoringDisable(true));
+            
             // Register Auton Stuff
             // list for auton selection (automatically adds options based on paths made)
-            autos = AutoBuilder.buildAutoChooser();
-            SmartDashboard.putData("Auto Selection", autos);
+
+            // Pathplanner test command
+            NamedCommands.registerCommand("toggleHood", Commands.runOnce(() -> s_Hood.toggleHood()));
             
             // Intake Commands
             // NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
@@ -229,8 +233,12 @@ public class RobotContainer {
             // //Shooter Commands
             // NamedCommands.registerCommand("startShooting", Commands.runOnce(()-> s_Shooter.calculateShooterSpeed(Units.Meters.of(s_PoseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches))).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(10).andThen(Commands.runOnce(() -> s_Shooter.stopMotors()))).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
             // NamedCommands.registerCommand("stopShooting", Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+
+            drivetrain.configureAutoBuilder();
+
+            autos = AutoBuilder.buildAutoChooser();
+            SmartDashboard.putData("Auto Selection", autos);
     }
-  
     
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -370,7 +378,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autos.getSelected();
+        return new PathPlannerAuto(autos.getSelected());
+        // return autos.getSelected();
         
         // // Simple drive back for auton
         // final var idle = new SwerveRequest.Idle();
