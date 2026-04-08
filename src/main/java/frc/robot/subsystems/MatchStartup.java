@@ -27,6 +27,7 @@ private Pigeon2 gyro;
         if(DriverStation.isDisabled()){
         gyro.setYaw(AllianceInfo.getAllianceRotation().getDegrees());
         LimelightHelpers.SetIMUMode("limelight", 1); // Seed internal IMU
+        LimelightHelpers.SetRobotOrientation("limelight", gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
         }
     }
 }

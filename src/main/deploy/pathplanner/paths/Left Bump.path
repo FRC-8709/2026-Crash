@@ -80,12 +80,28 @@
     },
     {
       "anchor": {
-        "x": 3.1346777777777777,
-        "y": 5.272544444444446
+        "x": 3.4757333333333333,
+        "y": 5.496666666666666
       },
       "prevControl": {
-        "x": 3.6998555555555557,
-        "y": 5.7500222222222215
+        "x": 4.134511904761904,
+        "y": 5.6114523809523815
+      },
+      "nextControl": {
+        "x": 2.7468427854998443,
+        "y": 5.3696646271380555
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9467738095238105,
+        "y": 4.736845238095238
+      },
+      "prevControl": {
+        "x": 2.957571428571429,
+        "y": 5.179547619047619
       },
       "nextControl": null,
       "isLocked": false,
@@ -100,6 +116,10 @@
     {
       "waypointRelativePos": 4,
       "rotationDegrees": -135.0
+    },
+    {
+      "waypointRelativePos": 5,
+      "rotationDegrees": -119.04065699451833
     }
   ],
   "constraintZones": [
@@ -107,6 +127,32 @@
       "name": "Intake Drive Speed",
       "minWaypointRelativePos": 2.049627791563276,
       "maxWaypointRelativePos": 3.359801488833711,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "First Off Bump",
+      "minWaypointRelativePos": 0.8743169398907104,
+      "maxWaypointRelativePos": 1.0928961748633879,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Second Off Bump",
+      "minWaypointRelativePos": 4.222950819672132,
+      "maxWaypointRelativePos": 4.275409836065574,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -120,13 +166,46 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "startIntake",
+      "waypointRelativePos": 1.6087431693989076,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "startIntake"
+        }
+      }
+    },
+    {
+      "name": "stopIntake",
+      "waypointRelativePos": 4.3191256830601095,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "stopIntake"
+        }
+      }
+    },
+    {
       "name": "toggleHood",
-      "waypointRelativePos": 4.61042183622832,
+      "waypointRelativePos": 4.931147540983607,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "toggleHood"
+        }
+      }
+    },
+    {
+      "name": "startShootSequence",
+      "waypointRelativePos": 5.85792349726776,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "startShootSequence"
         }
       }
     }
@@ -141,7 +220,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -39.43279964735483
+    "rotation": -17.376215099719243
   },
   "reversed": false,
   "folder": null,
