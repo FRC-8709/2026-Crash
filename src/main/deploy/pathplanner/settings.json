@@ -3,12 +3,12 @@
   "robotLength": 0.8636,
   "holonomicMode": true,
   "pathFolders": [
-    "Blue Autos",
-    "Red Autos"
+    "Left Bump",
+    "Right Bump"
   ],
   "autoFolders": [
-    "Blue Autos",
-    "Red Autos"
+    "Left Bump",
+    "Right Bump"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
@@ -34,5 +34,7 @@
   "brModuleY": -0.276225,
   "bumperOffsetX": 0.0,
   "bumperOffsetY": 0.0,
-  "robotFeatures": []
+  "robotFeatures": [
+    "{\"name\":\"Intake\",\"type\":\"rounded_rect\",\"data\":{\"center\":{\"x\":0.59,\"y\":0.0},\"size\":{\"width\":0.864,\"length\":0.3048},\"borderRadius\":0.05,\"strokeWidth\":0.02,\"filled\":false}}"
+  ]
 }

@@ -222,42 +222,22 @@ public class RobotContainer {
 
             // Pathplanner test command
             NamedCommands.registerCommand("toggleHood", Commands.runOnce(() -> s_Hood.toggleHood()));
-
+            
             // Intake Commands
-            NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
-            NamedCommands.registerCommand("stopIntake", new stopRollers(s_IntakeRoller));
             // NamedCommands.registerCommand("lowerIntake", new lowerLift(s_IntakeLift).andThen(new startRollers(s_IntakeRoller)));
             // NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
             // NamedCommands.registerCommand("raiseIntakeMiddle", new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
+            // NamedCommands.registerCommand("stopIntake", new stopRollers(s_IntakeRoller));
+            // NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
 
             // //Shooter Commands
-            NamedCommands.registerCommand("startShooting", Commands.sequence(
-                s_Shooter.runOnce(() -> s_Shooter.startScoring()),
-                new WaitCommand(1),
-                s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))
-            ));
-
-            NamedCommands.registerCommand("startLauncher", Commands.runOnce(() -> s_Shooter.startScoring()));
-            NamedCommands.registerCommand("stopLauncher", Commands.runOnce(() -> s_Shooter.stopScoring()));
-
-            NamedCommands.registerCommand("startIndexer", Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35)));
-            NamedCommands.registerCommand("stopIndexer", Commands.runOnce(() -> s_Indexer.stopRoller()));
-
-            NamedCommands.registerCommand("wait1Sec", new WaitCommand(1));
-            NamedCommands.registerCommand("wait5Sec", new WaitCommand(5));
-
-            NamedCommands.registerCommand("startShooting", Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(5)).andThen(Commands.runOnce(() -> s_Shooter.stopScoring())).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
-
-            NamedCommands.registerCommand("startShootSequence", Commands.sequence(
-                Commands.runOnce(() -> s_Shooter.startScoring()),
-                // new WaitCommand(1),
-                Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35))
-            ));
+            // NamedCommands.registerCommand("startShooting", Commands.runOnce(()-> s_Shooter.calculateShooterSpeed(Units.Meters.of(s_PoseEst.getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches))).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(10).andThen(Commands.runOnce(() -> s_Shooter.stopMotors()))).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
             // NamedCommands.registerCommand("stopShooting", Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
 
             drivetrain.configureAutoBuilder();
 
             autos = AutoBuilder.buildAutoChooser();
+            SmartDashboard.putBoolean("Right Side Auto", false);
             SmartDashboard.putData("Auto Selection", autos);
     }
     
