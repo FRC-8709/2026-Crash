@@ -96,6 +96,10 @@ import edu.wpi.first.units.measure.Distance;
             public static final double middlePosition = -30;
             public static final double downPosition = -60;
 
+            
+            public static final double intakeOutPosition = -200;
+            public static final double intakeMidPosition = -100;
+
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
             public static final int liftMotorPort = 21;

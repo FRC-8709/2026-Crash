@@ -108,7 +108,8 @@ public class IntakeLift extends SubsystemBase {
      */
    public void lowerLift() {
         // THIS WORKS WITH WHOLE NUMBERS BUT NOT DECIMALS FOR SOME REASON??? GOING TO LOSE MY MIND
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.downPosition));
+        // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.downPosition));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.intakeOutPosition));
     }
 
     /**
@@ -117,12 +118,15 @@ public class IntakeLift extends SubsystemBase {
      */
     public void raiseLift() {
         // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.upPosition));
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
+        // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.intakeMidPosition));
 
     }
 
     public void raiseLiftMiddle() {
-        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
+        // liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.middlePosition));
+        liftMotor.setControl(Constants.IntakeConstants.liftPosition.withPosition(Constants.IntakeConstants.intakeMidPosition));
+
 
     }
 

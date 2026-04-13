@@ -8,6 +8,8 @@ package frc.robot;
 // This was kept seperate for some reason so I'm just leaving it like this
 import static edu.wpi.first.units.Units.*;
 
+import java.util.List;
+
 import javax.print.attribute.standard.JobHoldUntil;
 
 // pheonix6 imports
@@ -19,6 +21,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FlippingUtil;
 import com.ctre.phoenix6.hardware.CANcoder;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -40,6 +43,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -230,6 +234,10 @@ public class RobotContainer {
             // NamedCommands.registerCommand("raiseIntake", new stopRollers(s_IntakeRoller).andThen(new raiseLift(s_IntakeLift)));
             // NamedCommands.registerCommand("raiseIntakeMiddle", new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
 
+            // Intake position commands
+            NamedCommands.registerCommand("intakeOut", Commands.runOnce(() -> s_IntakeLift.lowerLift()));
+            NamedCommands.registerCommand("intakeIn", Commands.runOnce(() -> s_IntakeLift.raiseLiftMiddle()));
+
             // //Shooter Commands
             NamedCommands.registerCommand("startShooting", Commands.sequence(
                 s_Shooter.runOnce(() -> s_Shooter.startScoring()),
@@ -400,65 +408,41 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new PathPlannerAuto(autos.getSelected());
-        // return autos.getSelected();
+        // Old for normal selection, would still work just without flipping
+        // return new PathPlannerAuto(autos.getSelected());
         
-        // // Simple drive back for auton
-        // final var idle = new SwerveRequest.Idle();
+        boolean shouldMirror = SmartDashboard.getBoolean("Right Side Auto", false);
+        String selectedAutoName = autos.getSelected().getName();
 
-        // return Commands.sequence(
-        //     // drivetrain.runOnce(() -> drivetrain.seedFieldCentric()),
-        //     drivetrain.runOnce(() ->
-        //         drivetrain.setControl(
-        //             new SwerveRequest.FieldCentric()
-        //                 .withVelocityX(-1)
-        //                 .withVelocityY(0)
-        //                 .withRotationalRate(0)
-        //         )
-        //     ),
-        //     new WaitCommand(.85),
-        //     drivetrain.runOnce(() ->
-        //         drivetrain.setControl(
-        //             new SwerveRequest.FieldCentric()
-        //                 .withVelocityX(0)
-        //                 .withVelocityY(0)
-        //                 .withRotationalRate(0)
-        //         )  
-        //     ),
+        if(!shouldMirror) {
+            return new PathPlannerAuto(selectedAutoName);
+        }
 
-        //     // drivetrain.run(() -> drivetrain.setControl(idle)),
-        //     new WaitCommand(.1),
-        //     // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()),
-        //     s_Hood.runOnce(() -> s_Hood.toggleHood()),
-        //     s_Shooter.runOnce(() -> s_Shooter.startScoring()),
-        //     new WaitCommand(1.25),
-        //     s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
-        //     new WaitCommand(5),
-        //     s_Shooter.runOnce(() -> s_Shooter.stopScoring()).andThen(s_Shooter.runOnce(() -> s_Shooter.stopMotors())).andThen(s_Indexer.runOnce(() -> s_Indexer.stopRoller()))
-        //     // s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting())
-        // );
+        try {
+            List<PathPlannerPath> paths = PathPlannerAuto.getPathGroupFromAutoFile(selectedAutoName);
 
+            PathPlannerPath firstpath = paths.get(0);
+            PathPlannerPath mirroredFirst = firstpath.mirrorPath();
 
+            Pose2d startingPose;
 
+            if(DriverStation.getAlliance().get() == Alliance.Red) {
+                startingPose = FlippingUtil.flipFieldPose(mirroredFirst.getStartingHolonomicPose().get());
+            } else {
+                startingPose = mirroredFirst.getStartingHolonomicPose().get();
+            }
 
+            Command resetPose = drivetrain.runOnce(() -> drivetrain.resetPose(startingPose));
 
-
-        // return Commands.sequence(
-        //     drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-        //     drivetrain.applyRequest(() ->
-        //         drive.withVelocityX(-0.5)
-        //         .withVelocityY(0)
-        //         .withRotationalRate(0)).withTimeout(0.6)
-        //     drivetrain.applyRequest(() -> idle),
-        //     // s_Hood.runOnce(()-> s_Hood.raiseHood()),
-        //     //new WaitCommand(1),
-        //     s_Shooter.runOnce(()-> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.autonShooterSpeed)),
-        //     new WaitCommand(1),
-        //     s_Indexer.runOnce(()-> s_Indexer.setMotorSpeedRPM(35)),
-        //     new WaitCommand(5),
-        //     s_Shooter.runOnce(()-> s_Shooter.stopMotors()),
-        //     s_Indexer.runOnce(()-> s_Indexer.stopRoller()),
-        //     s_Indexer.runOnce(() -> s_Indexer.stopRoller())
-        // );
+            Command mirroredAuton = resetPose;
+            for (PathPlannerPath path : paths) {
+                PathPlannerPath mirroredPath = path.mirrorPath();
+                mirroredAuton = mirroredAuton.andThen(AutoBuilder.followPath(mirroredPath));
+            }
+            return mirroredAuton;
+        } catch (Exception e) {
+            DriverStation.reportError("Mirror failed, running normal auto", e.getStackTrace());
+            return new PathPlannerAuto(selectedAutoName);
+        }
     }
 }
