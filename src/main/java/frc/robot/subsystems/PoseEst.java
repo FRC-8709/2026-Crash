@@ -71,72 +71,78 @@ public class PoseEst extends SubsystemBase {
     public void periodic() {
         alliance = DriverStation.getAlliance().orElse(Alliance.Red);
         SmartDashboard.putString("perodicRun", "isRunning");
-        // Updating robot pose based off limelight
-        LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
-        mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-        // mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-        
-        if (didInitialReset == false && mt2.tagCount >= 1){  
-            drivetrain.resetPose(mt2.pose);
-            didInitialReset= true;
-        };
 
-        // if (mt2.tagCount >= 1){  
-        //     drivetrain.resetPose(mt2.pose);
-        // };
+        // ONLY DO THIS PART IF THE ROBOT IS ENABLED
+        // OTHERWISE MatchStartup WONT BE ABLE TO DO THE INITIAL SETUP OF THE ROBOT, BOTH PERIODICS WILL BE FIGHTING OVER THE LIMELIGHT
+        // Once the match is started, we use this to keep track of the robot, we don't want it to keep resetting
+        if(DriverStation.isEnabled()){
+            // Updating robot pose based off limelight
+            LimelightHelpers.SetRobotOrientation("limelight", getRotation(), 0, 0, 0, 0, 0);
+            mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+            // mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            
+            if (didInitialReset == false && mt2.tagCount >= 1){  
+                drivetrain.resetPose(mt2.pose);
+                didInitialReset= true;
+            };
+
+            // if (mt2.tagCount >= 1){  
+            //     drivetrain.resetPose(mt2.pose);
+            // };
+        
+            doRejectUpdate = false;
     
-        doRejectUpdate = false;
-   
-        // if our angular velocity is greater than 360 degrees per second, ignore vision updates
-        if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360){
-            doRejectUpdate = true;
+            // if our angular velocity is greater than 360 degrees per second, ignore vision updates
+            if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360){
+                doRejectUpdate = true;
+            }
+            
+            if(mt2.tagCount == 0){
+                doRejectUpdate = true;
+            }
+            
+            if(!doRejectUpdate){
+                //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
+                drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,.7));
+                drivetrain.addVisionMeasurement(
+                    mt2.pose,
+                    mt2.timestampSeconds);
+            }
+
+            // setting robot rotation in elastic
+            // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+            // double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
+
+
+            // SmartDashboard.putNumber("LimelightTX", tx);
+            // SmartDashboard.putNumber("LimelightTY", ty);
+
+            // How many tags can the limelight see?
+            SmartDashboard.putNumber("Visible tag count", mt2.tagCount);
+
+            // Where does the LIMELIGHT think we are?
+            SmartDashboard.putNumber("MegaTag2 Pose X", mt2.pose.getMeasureX().in(Inches));
+            SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureY().in(Inches));
+            SmartDashboard.putNumber("MegaTag2 Pose Angle", mt2.pose.getRotation().getDegrees());
+
+            // Did the limelight ever try to tell the drivetrain where it thinks we are?
+            SmartDashboard.putBoolean("Did reset", didInitialReset);
+
+            // Where does the ROBOT think its facing?
+            SmartDashboard.putNumber("Robot rotation", getRotation());
+            
+            // Based on math, which way should the robot face to point at the goal?
+            SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle(Constants.FieldConstants.blueHubPosition).in(Degree));
+
+            SmartDashboard.putNumber("Distance from goal", Units.Meters.of(getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
+
+            // Field map
+            fieldMap.setRobotPose(drivetrain.getState().Pose);
+            SmartDashboard.putData("Field Map", fieldMap);
+
+            // Where does the ROBOT think it is (x and y coordinates this time)
+            LimelightDistance();
         }
-        
-        if(mt2.tagCount == 0){
-            doRejectUpdate = true;
-        }
-        
-        if(!doRejectUpdate){
-            //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.00001,.00001,.00001));
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7,.7));
-            drivetrain.addVisionMeasurement(
-                mt2.pose,
-                mt2.timestampSeconds);
-        }
-
-        // setting robot rotation in elastic
-        // double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        // double ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0);
-
-
-        // SmartDashboard.putNumber("LimelightTX", tx);
-        // SmartDashboard.putNumber("LimelightTY", ty);
-
-        // How many tags can the limelight see?
-        SmartDashboard.putNumber("Visible tag count", mt2.tagCount);
-
-        // Where does the LIMELIGHT think we are?
-        SmartDashboard.putNumber("MegaTag2 Pose X", mt2.pose.getMeasureX().in(Inches));
-        SmartDashboard.putNumber("MegaTag2 Pose Y", mt2.pose.getMeasureY().in(Inches));
-        SmartDashboard.putNumber("MegaTag2 Pose Angle", mt2.pose.getRotation().getDegrees());
-
-        // Did the limelight ever try to tell the drivetrain where it thinks we are?
-        SmartDashboard.putBoolean("Did reset", didInitialReset);
-
-        // Where does the ROBOT think its facing?
-        SmartDashboard.putNumber("Robot rotation", getRotation());
-        
-        // Based on math, which way should the robot face to point at the goal?
-        SmartDashboard.putNumber("Goal facing angle", getGoalFacingAngle(Constants.FieldConstants.blueHubPosition).in(Degree));
-
-        SmartDashboard.putNumber("Distance from goal", Units.Meters.of(getDistanceFromGoal().toTranslation2d().getNorm()).in(Inches));
-
-        // Field map
-        fieldMap.setRobotPose(drivetrain.getState().Pose);
-        SmartDashboard.putData("Field Map", fieldMap);
-
-        // Where does the ROBOT think it is (x and y coordinates this time)
-        LimelightDistance();
     }
     
     private Pose2d getPose2d(){
@@ -284,6 +290,8 @@ public class PoseEst extends SubsystemBase {
     }
 
     public void resetBotPose() {
+        LimelightHelpers.SetRobotOrientation("limelight", gyro.getYaw().getValue().in(Degree), 0, 0, 0, 0, 0);
+        mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
         drivetrain.resetPose(mt2.pose);
     }
 }

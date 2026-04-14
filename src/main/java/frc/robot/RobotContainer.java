@@ -171,9 +171,7 @@ public class RobotContainer {
         public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
         public final Pigeon2 gyro = new Pigeon2(Constants.SensorConsants.pigeonPort);
     
-        // Subsystem instance declaration
-        private final Agitator s_Agitator = new Agitator(); // Not implemented yet
-    
+        // Subsystem instance declaration    
         private final LedControl s_LedControl = new LedControl(Constants.LedConstants.ledPort, Constants.LedConstants.ledLength);
     
         private final ZoneTracking s_ZoneTracking = new ZoneTracking(drivetrain, s_LedControl);
@@ -197,7 +195,8 @@ public class RobotContainer {
 
         private final DriveControl s_DriveControl = new DriveControl(drivetrain, joystickLeft1, joystickLeft2, controller);
 
-        private final MatchStartup s_MatchStartup = new MatchStartup(gyro);
+        // Changed to use the PoseEst to reset the limelight properly on startup
+        private final MatchStartup s_MatchStartup = new MatchStartup(gyro, s_PoseEst);
     
         // Field zone triggers
         Trigger inNeutralZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.NeutralZone);
