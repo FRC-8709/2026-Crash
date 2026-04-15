@@ -73,6 +73,8 @@ import edu.wpi.first.units.measure.Distance;
         public class IndexerConstants {
             // Indexer CAN ids
             public static final int indexerMotorPort = 18;
+
+            public static final double indexerSpeed = 35;
         
             public static final VelocityVoltage indexerVelocity = new VelocityVoltage(0);
         }
@@ -96,7 +98,7 @@ import edu.wpi.first.units.measure.Distance;
             public static final double middlePosition = -30;
             public static final double downPosition = -60;
 
-            
+
             public static final double intakeOutPosition = -200;
             public static final double intakeMidPosition = -70;
 

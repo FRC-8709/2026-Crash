@@ -243,14 +243,14 @@ public class RobotContainer {
             NamedCommands.registerCommand("startShooting", Commands.sequence(
                 s_Shooter.runOnce(() -> s_Shooter.startScoring()),
                 new WaitCommand(1),
-                s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))
+                s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))
             ));
 
             //Shooter Commands
             // NamedCommands.registerCommand("startShooting", Commands.sequence(
             //     s_Shooter.runOnce(() -> s_Shooter.startScoring()),
             //     new WaitCommand(1),
-            //     s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
+            //     s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed)),
             //     new WaitCommand(1),
             //     s_Shooter.runOnce(() -> {
             //         s_Shooter.stopScoring();
@@ -268,18 +268,18 @@ public class RobotContainer {
             NamedCommands.registerCommand("startLauncher", Commands.runOnce(() -> s_Shooter.startScoring()));
             NamedCommands.registerCommand("stopLauncher", Commands.runOnce(() -> s_Shooter.stopScoring()));
 
-            NamedCommands.registerCommand("startIndexer", Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35)));
+            NamedCommands.registerCommand("startIndexer", Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed)));
             NamedCommands.registerCommand("stopIndexer", Commands.runOnce(() -> s_Indexer.stopRoller()));
 
             NamedCommands.registerCommand("wait1Sec", new WaitCommand(1));
             NamedCommands.registerCommand("wait5Sec", new WaitCommand(5));
 
-            NamedCommands.registerCommand("startShooting", Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))).andThen(new WaitCommand(5)).andThen(Commands.runOnce(() -> s_Shooter.stopScoring())).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
+            NamedCommands.registerCommand("startShooting", Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new WaitCommand(5)).andThen(Commands.runOnce(() -> s_Shooter.stopScoring())).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
 
             NamedCommands.registerCommand("startShootSequence", Commands.sequence(
                 Commands.runOnce(() -> s_Shooter.startScoring()),
                 // new WaitCommand(1),
-                Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35))
+                Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))
             ));
             // NamedCommands.registerCommand("stopShooting", Commands.runOnce(()-> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
 
@@ -361,9 +361,9 @@ public class RobotContainer {
         //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
-            // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)));
-        // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))));
+        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new lowerLift(s_IntakeLift)));
+            // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed)));
+        // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(Commands.runOnce(() -> s_DriveControl.stopTargeting())));
             // joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
         // joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
@@ -396,7 +396,7 @@ public class RobotContainer {
         // Turn indexer on/off
 
         // testing other stuff so commented this out
-        // joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(35))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        // joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
         // joystickLeft2Button3.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(-10)).andThen(Commands.runOnce(()-> s_IntakeRoller.spinRollerReverse()))).onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()).andThen(Commands.runOnce(()-> s_IntakeRoller.stopRoller())));
         
         
