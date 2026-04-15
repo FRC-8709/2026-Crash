@@ -44,7 +44,7 @@ public class IntakeLift extends SubsystemBase {
 
         // Dummy numbers! Please tune!
         // Tune like arm for POSITION CONTROL (PositionVoltage)
-        motorConfig.Slot0.kP = 1;
+        motorConfig.Slot0.kP = .3;
         motorConfig.Slot0.kI = 0;
         motorConfig.Slot0.kD = 0;
         motorConfig.Slot0.kV = 12;

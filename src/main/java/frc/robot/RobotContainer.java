@@ -203,6 +203,9 @@ public class RobotContainer {
         Trigger inBlueAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.BlueAllianceZone);
         Trigger inRedAllianceZone = new Trigger(() -> s_ZoneTracking.currentZone() == FieldZones.RedAllianceZone);
 
+        // State triggers
+        Trigger isEnabled = new Trigger(() -> DriverStation.isTeleopEnabled() == true);
+
         //Match triggers
         Trigger teleopEnabled = new Trigger(() -> s_MatchTimer.isRobotEnabled() == true);
 
@@ -361,10 +364,11 @@ public class RobotContainer {
         //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new lowerLift(s_IntakeLift)));
+        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new raiseLiftMiddle(s_IntakeLift)));
             // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed)));
         // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(Commands.runOnce(() -> s_DriveControl.stopTargeting())));
+        isEnabled.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(Commands.runOnce(() -> s_DriveControl.stopTargeting())));
             // joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Indexer.stopRoller()));
         // joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
         // SHOOTER INDEXER SEQUENCE CONTROL
@@ -419,10 +423,10 @@ public class RobotContainer {
         // joystickRight1Button9.onTrue(new stopRollers(s_IntakeRoller).andThen(new raiseLiftMiddle(s_IntakeLift)).andThen(new startRollers(s_IntakeRoller)));
         joystickRight1Button10.onTrue(Commands.runOnce(() -> s_IntakeLift.stopLift()));
 
-        joystickRight1Button7.onTrue(new lowerLift(s_IntakeLift));
-        // joystickRight1Button7.onTrue(new lowerLift(s_IntakeLift).andThen(new WaitCommand(.25).andThen(new startRollers(s_IntakeRoller))));
-        joystickRight1Button8.onTrue(new raiseLiftMiddle(s_IntakeLift));
-        // joystickRight1Button8.onTrue(new raiseLiftMiddle(s_IntakeLift).andThen(new startRollersSlow(s_IntakeRoller)));
+        // joystickRight1Button7.onTrue(new lowerLift(s_IntakeLift));
+        joystickRight1Button7.onTrue(new lowerLift(s_IntakeLift).andThen(new WaitCommand(.25).andThen(new startRollers(s_IntakeRoller))));
+        // joystickRight1Button8.onTrue(new raiseLiftMiddle(s_IntakeLift));
+        joystickRight1Button8.onTrue(new raiseLiftMiddle(s_IntakeLift).andThen(new startRollersSlow(s_IntakeRoller)));
 
         // ps4Circle.whileTrue(new lookAtPointDrive(drivetrain, joystickLeft1, joystickLeft2, controller));
         ps4Circle.onTrue(Commands.runOnce(() -> s_DriveControl.toggleTargeting()));
