@@ -147,4 +147,12 @@ public class Hood extends SubsystemBase {
     public void toggleHood() {
         hoodEnabled = !hoodEnabled;
     }
+
+    public void enableHood() {
+        hoodEnabled = !hoodEnabled;
+    }
+
+    public void disableHood() {
+        hoodEnabled = !hoodEnabled;
+    }
 }

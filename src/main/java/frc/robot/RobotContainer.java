@@ -225,6 +225,8 @@ public class RobotContainer {
 
             // Pathplanner test command
             NamedCommands.registerCommand("toggleHood", Commands.runOnce(() -> s_Hood.toggleHood()));
+            NamedCommands.registerCommand("enableHood", Commands.runOnce(() -> s_Hood.enableHood()));
+            NamedCommands.registerCommand("disableHood", Commands.runOnce(() -> s_Hood.disableHood()));
 
             // Intake Commands
             NamedCommands.registerCommand("startIntake", new startRollers(s_IntakeRoller));
@@ -242,6 +244,25 @@ public class RobotContainer {
                 s_Shooter.runOnce(() -> s_Shooter.startScoring()),
                 new WaitCommand(1),
                 s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31))
+            ));
+
+            //Shooter Commands
+            // NamedCommands.registerCommand("startShooting", Commands.sequence(
+            //     s_Shooter.runOnce(() -> s_Shooter.startScoring()),
+            //     new WaitCommand(1),
+            //     s_Indexer.runOnce(() -> s_Indexer.setMotorSpeedRPM(31)),
+            //     new WaitCommand(1),
+            //     s_Shooter.runOnce(() -> {
+            //         s_Shooter.stopScoring();
+            //         s_Shooter.stopMotors();
+            //     }),
+            //     s_Indexer.runOnce(() -> s_Indexer.stopRoller())
+            // ));
+
+            NamedCommands.registerCommand("waitTesting", Commands.sequence(
+                s_Hood.runOnce(() -> s_Hood.toggleHood())
+                .andThen(new WaitCommand(1))
+                .andThen(s_DriveControl.runOnce(() -> s_DriveControl.toggleTargeting()))
             ));
 
             NamedCommands.registerCommand("startLauncher", Commands.runOnce(() -> s_Shooter.startScoring()));
