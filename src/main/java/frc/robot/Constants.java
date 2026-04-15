@@ -98,7 +98,7 @@ import edu.wpi.first.units.measure.Distance;
 
             
             public static final double intakeOutPosition = -200;
-            public static final double intakeMidPosition = -100;
+            public static final double intakeMidPosition = -70;
 
             // Motor CAN ids
             public static final int rollerMotorPort = 22;
@@ -106,12 +106,14 @@ import edu.wpi.first.units.measure.Distance;
 
             // Speed constants
             private static final double rollerSpeed = -35;
+            private static final double slowRollerSpeed = -25;
             private static final double reverseRollerSpeed=35;
 
 
             // Object for speed control
             // We can hardcode the roller speed number cause we aren't planning on varying the speed at all
             public static final VelocityVoltage rollerVelocity = new VelocityVoltage(rollerSpeed);
+            public static final VelocityVoltage slowRollerVelocity = new VelocityVoltage(slowRollerSpeed);
             public static final VelocityVoltage liftVelocity = new VelocityVoltage(0);
             public static final VelocityVoltage rollerReverseVelocity = new VelocityVoltage(reverseRollerSpeed);
 

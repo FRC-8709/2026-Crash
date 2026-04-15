@@ -44,9 +44,9 @@ public class IntakeLift extends SubsystemBase {
 
         // Dummy numbers! Please tune!
         // Tune like arm for POSITION CONTROL (PositionVoltage)
-        motorConfig.Slot0.kP = 0.15;
-        motorConfig.Slot0.kI = 0.0;
-        motorConfig.Slot0.kD = 0.0;
+        motorConfig.Slot0.kP = 1;
+        motorConfig.Slot0.kI = 0;
+        motorConfig.Slot0.kD = 0;
         motorConfig.Slot0.kV = 12;
         motorConfig.Slot0.kS = 0.20;
         CANcoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;

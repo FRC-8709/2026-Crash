@@ -203,7 +203,7 @@
   "eventMarkers": [
     {
       "name": "intakeOut",
-      "waypointRelativePos": 1.3736972704714923,
+      "waypointRelativePos": 0.19817850637522802,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -242,6 +242,17 @@
         "type": "named",
         "data": {
           "name": "toggleHood"
+        }
+      }
+    },
+    {
+      "name": "intakeIn",
+      "waypointRelativePos": 7.973770491803279,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "intakeIn"
         }
       }
     },

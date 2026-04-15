@@ -100,8 +100,10 @@ public class Hood extends SubsystemBase {
     public double calculateHoodAngle(double robotDistance, double shooterSpeed) {
         final double distanceOffset = 3;
         final double minPos = 0;
-        final double maxPos = 20;
+        final double maxPos = 10;
+        // old model
         double clampedPosition = MathUtil.clamp(-0.495258 + (0.108459 * (robotDistance+distanceOffset)) + (-0.151605 * shooterSpeed), minPos, maxPos);
+        // double clampedPosition = MathUtil.clamp(-0.307103 + (0.101938 * (robotDistance+distanceOffset)) + (-0.173569 * shooterSpeed), minPos, maxPos);
         SmartDashboard.putNumber("Calculated Hood Position", clampedPosition);
         return clampedPosition;
     }

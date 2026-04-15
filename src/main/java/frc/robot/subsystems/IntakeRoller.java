@@ -79,6 +79,10 @@ public class IntakeRoller extends SubsystemBase {
         // Publish the RPS to the network table
         rollerMotor.setControl(Constants.IntakeConstants.rollerVelocity);
     }
+        public void spinRollerSlow() {
+        // Publish the RPS to the network table
+        rollerMotor.setControl(Constants.IntakeConstants.slowRollerVelocity);
+    }
     public void spinRollerReverse(){
         rollerMotor.setControl(Constants.IntakeConstants.rollerReverseVelocity);
     }
