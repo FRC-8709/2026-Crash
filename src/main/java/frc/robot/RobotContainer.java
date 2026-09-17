@@ -360,11 +360,12 @@ public class RobotContainer {
         // SHOOTER CONTROLS
         // Turn shooter on/off
            // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(Constants.ShooterConstants.shooterSpeed)));
-        //joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
-        //joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
+        // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.spinShooter()));
+        joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(60)));
+        joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
    
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new raiseLiftMiddle(s_IntakeLift)));
+        //   joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new raiseLiftMiddle(s_IntakeLift)));
             // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed)));
         // joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.startScoring()).andThen(new WaitCommand(1.25)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))));
         joystickLeft2Button4.onTrue(Commands.runOnce(()-> s_Shooter.stopScoring()).andThen(Commands.runOnce(() -> s_Shooter.stopMotors())).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())).andThen(Commands.runOnce(() -> s_DriveControl.stopTargeting())));
