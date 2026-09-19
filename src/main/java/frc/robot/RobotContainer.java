@@ -364,10 +364,8 @@ public class RobotContainer {
         joystickLeft2Button6.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(10)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(13))));
         joystickLeft2Button6.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
 
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(50)));
-        joystickLeft2Button5.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()));
-        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(17)));
-        joystickLeft2Button5.onFalse(Commands.runOnce(() -> s_Indexer.stopRoller()));
+        joystickLeft2Button5.onTrue(Commands.runOnce(() -> s_Shooter.setMotorSpeedRPM(50)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(17))));
+        joystickLeft2Button5.onFalse(Commands.runOnce(() -> s_Shooter.stopMotors()).andThen(Commands.runOnce(() -> s_Indexer.stopRoller())));
 
         //joystickLeft2Button4.onTrue(Commands.runOnce(() -> s_Shooter.stopMotors()));
         //   joystickLeft2Button6.onTrue(Commands.runOnce(()-> s_IntakeRoller.stopRoller()).andThen(Commands.runOnce(() -> s_Shooter.startScoring())).andThen(new WaitCommand(.35)).andThen(Commands.runOnce(() -> s_Indexer.setMotorSpeedRPM(Constants.IndexerConstants.indexerSpeed))).andThen(new raiseLiftMiddle(s_IntakeLift)));
